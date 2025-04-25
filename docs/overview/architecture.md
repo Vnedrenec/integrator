@@ -90,99 +90,139 @@ sequenceDiagram
 
 ## Структура проекта
 
-### Текущая структура проекта (Frontend)
-
 ```text
 integrator/
-├── css/                  # Стили CSS
-│   └── styles.css        # Основной файл стилей
-│
-├── docs/                 # Документация проекта
-│   ├── api/              # Документация по API
-│   ├── connectors/       # Документация по коннекторам
-│   ├── database/         # Схема базы данных
-│   ├── development/      # Руководства по разработке
-│   ├── infrastructure/   # Инфраструктура и деплой
-│   ├── integrations/     # Интеграции с внешними сервисами
-│   ├── marketplace/      # Документация по маркетплейсу
-│   ├── monitoring/       # Мониторинг и аналитика
-│   ├── overview/         # Обзор проекта
-│   ├── reference/        # Справочные материалы
-│   ├── requirements/     # Требования к проекту
-│   ├── security/         # Безопасность
-│   ├── subscription/     # Система подписок
-│   ├── support/          # Техническая поддержка
-│   ├── testing/          # Тестирование
-│   ├── ui/               # UI/UX документация
-│   └── index.md          # Индекс документации
-│
-├── img/                  # Изображения и графические ресурсы
-│
-├── js/                   # JavaScript файлы
-│   ├── main.js           # Основной JavaScript файл
-│   └── user-dropdown.js  # Скрипт для выпадающего меню пользователя
-│
-├── pages/                # HTML страницы
-│   ├── about.html        # О нас
-│   ├── connector-details.html # Детальная страница коннектора
-│   ├── connectors.html   # Каталог коннекторов
-│   ├── contacts.html     # Контакты
-│   ├── dashboard.html    # Личный кабинет
-│   ├── documentation.html # Документация
-│   ├── login.html        # Страница входа
-│   ├── pricing.html      # Цены
-│   ├── register.html     # Регистрация
-│   ├── user-analytics.html # Аналитика пользователя
-│   ├── user-api-keys.html # API-ключи пользователя
-│   ├── user-connectors.html # Коннекторы пользователя
-│   ├── user-profile.html # Профиль пользователя
-│   └── user-subscriptions.html # Подписки пользователя
-│
-├── .gitignore            # Файл исключений для Git
-├── index.html            # Главная страница
-├── netlify.toml          # Конфигурация для Netlify
-└── windsurf_deployment.yaml # Конфигурация для деплоя
-```
-
-### Планируемая структура бэкенда (Clean Architecture)
-
-```text
-integrator/
-├── src/
-│   ├── domain/                 # Слой сущностей и бизнес-правил
-│   │   ├── entities/           # Бизнес-сущности
-│   │   ├── repositories/       # Интерфейсы репозиториев
-│   │   └── services/           # Доменные сервисы
+├── src/                          # Исходный код проекта
+│   ├── domain/                   # Слой сущностей и бизнес-правил
+│   │   ├── entities/             # Бизнес-сущности
+│   │   │   ├── user.entity.ts    # Сущность пользователя
+│   │   │   ├── connector.entity.ts # Сущность коннектора
+│   │   │   ├── subscription.entity.ts # Сущность подписки
+│   │   │   ├── payment.entity.ts # Сущность платежа
+│   │   │   ├── api-key.entity.ts # Сущность API-ключа
+│   │   │   └── make-account.entity.ts # Сущность аккаунта Make
+│   │   │
+│   │   ├── repositories/         # Интерфейсы репозиториев
+│   │   │   ├── user.repository.ts # Репозиторий пользователей
+│   │   │   ├── connector.repository.ts # Репозиторий коннекторов
+│   │   │   ├── subscription.repository.ts # Репозиторий подписок
+│   │   │   └── payment.repository.ts # Репозиторий платежей
+│   │   │
+│   │   └── services/             # Доменные сервисы
+│   │       ├── subscription.service.ts # Сервис подписок
+│   │       ├── connector.service.ts # Сервис коннекторов
+│   │       └── payment.service.ts # Сервис платежей
 │   │
-│   ├── application/            # Слой сценариев использования
-│   │   ├── use_cases/          # Сценарии использования
-│   │   ├── interfaces/         # Интерфейсы для внешних сервисов
-│   │   └── dto/                # Объекты передачи данных
+│   ├── application/              # Слой сценариев использования
+│   │   ├── use_cases/            # Сценарии использования
+│   │   │   ├── user/             # Сценарии для пользователей
+│   │   │   ├── subscription/     # Сценарии для подписок
+│   │   │   ├── connector/        # Сценарии для коннекторов
+│   │   │   └── payment/          # Сценарии для платежей
+│   │   │
+│   │   ├── interfaces/           # Интерфейсы для внешних сервисов
+│   │   │   ├── payment-gateway.interface.ts # Интерфейс платежного шлюза
+│   │   │   ├── make-api.interface.ts # Интерфейс API Make
+│   │   │   └── email-service.interface.ts # Интерфейс сервиса email
+│   │   │
+│   │   └── dto/                  # Объекты передачи данных
+│   │       ├── user.dto.ts       # DTO пользователя
+│   │       ├── connector.dto.ts  # DTO коннектора
+│   │       ├── subscription.dto.ts # DTO подписки
+│   │       └── payment.dto.ts    # DTO платежа
 │   │
-│   ├── infrastructure/         # Слой инфраструктуры
-│   │   ├── database/           # Реализация доступа к БД
-│   │   ├── external_services/  # Интеграции с внешними сервисами
-│   │   ├── repositories/       # Реализация репозиториев
-│   │   └── security/           # Компоненты безопасности
+│   ├── infrastructure/           # Слой инфраструктуры
+│   │   ├── database/             # Реализация доступа к БД
+│   │   │   ├── migrations/       # Миграции базы данных
+│   │   │   ├── seeds/            # Сиды для заполнения БД
+│   │   │   └── config.ts         # Конфигурация БД
+│   │   │
+│   │   ├── external_services/    # Интеграции с внешними сервисами
+│   │   │   ├── stripe/           # Интеграция со Stripe
+│   │   │   ├── make-api/         # Интеграция с API Make
+│   │   │   └── sendgrid/         # Интеграция с SendGrid
+│   │   │
+│   │   ├── repositories/         # Реализация репозиториев
+│   │   │   ├── typeorm/          # Реализации на TypeORM
+│   │   │   └── mongo/            # Реализации на MongoDB
+│   │   │
+│   │   └── security/             # Компоненты безопасности
+│   │       ├── jwt/              # JWT аутентификация
+│   │       ├── oauth/            # OAuth аутентификация
+│   │       └── encryption.ts     # Шифрование данных
 │   │
-│   ├── interfaces/             # Слой интерфейсов
-│   │   ├── api/                # REST API контроллеры
-│   │   ├── web/                # Web контроллеры
-│   │   └── jobs/               # Фоновые задачи
+│   ├── interfaces/               # Слой интерфейсов
+│   │   ├── api/                  # REST API контроллеры
+│   │   │   ├── user.controller.ts # Контроллер пользователей
+│   │   │   ├── connector.controller.ts # Контроллер коннекторов
+│   │   │   ├── subscription.controller.ts # Контроллер подписок
+│   │   │   └── payment.controller.ts # Контроллер платежей
+│   │   │
+│   │   ├── web/                  # Web контроллеры
+│   │   │   ├── admin.controller.ts # Контроллер админ-панели
+│   │   │   └── dashboard.controller.ts # Контроллер дашборда
+│   │   │
+│   │   └── jobs/                 # Фоновые задачи
+│   │       ├── subscription-check.job.ts # Проверка подписок
+│   │       ├── payment-reminder.job.ts # Напоминания об оплате
+│   │       └── usage-stats.job.ts # Сбор статистики использования
 │   │
-│   └── presentation/           # Слой представления (фронтенд)
-│       ├── admin/              # Панель администратора
-│       ├── auth/               # Компоненты аутентификации
-│       ├── dashboard/          # Личный кабинет пользователя
-│       └── public/             # Публичные страницы
+│   └── main.ts                   # Точка входа в приложение
 │
-├── tests/                      # Тесты
-│   ├── unit/                   # Модульные тесты
-│   ├── integration/            # Интеграционные тесты
-│   └── e2e/                    # End-to-end тесты
+├── tests/                        # Тесты
+│   ├── unit/                     # Модульные тесты
+│   │   ├── domain/               # Тесты для домена
+│   │   ├── application/          # Тесты для приложения
+│   │   └── infrastructure/       # Тесты для инфраструктуры
+│   │
+│   ├── integration/              # Интеграционные тесты
+│   │   ├── api/                  # Тесты API
+│   │   └── repositories/         # Тесты репозиториев
+│   │
+│   └── e2e/                      # End-to-end тесты
+│       ├── user.e2e-spec.ts      # E2E тесты для пользователей
+│       ├── connector.e2e-spec.ts # E2E тесты для коннекторов
+│       └── subscription.e2e-spec.ts # E2E тесты для подписок
 │
-├── config/                     # Конфигурационные файлы
-└── scripts/                    # Скрипты для развертывания и т.д.
+├── config/                       # Конфигурационные файлы
+│   ├── app.config.ts             # Основная конфигурация приложения
+│   ├── database.config.ts        # Конфигурация базы данных
+│   ├── cache.config.ts           # Конфигурация кэширования
+│   └── queue.config.ts           # Конфигурация очередей
+│
+├── scripts/                      # Скрипты для развертывания и т.д.
+│   ├── deploy.sh                 # Скрипт деплоя
+│   ├── backup.sh                 # Скрипт резервного копирования
+│   └── seed-db.sh                # Скрипт заполнения БД
+│
+├── docs/                         # Документация проекта
+│   ├── api/                      # Документация по API
+│   ├── connectors/               # Документация по коннекторам
+│   ├── database/                 # Схема базы данных
+│   ├── development/              # Руководства по разработке
+│   ├── infrastructure/           # Инфраструктура и деплой
+│   ├── integrations/             # Интеграции с внешними сервисами
+│   ├── marketplace/              # Документация по маркетплейсу
+│   ├── monitoring/               # Мониторинг и аналитика
+│   ├── overview/                 # Обзор проекта
+│   ├── reference/                # Справочные материалы
+│   ├── requirements/             # Требования к проекту
+│   ├── security/                 # Безопасность
+│   ├── subscription/             # Система подписок
+│   ├── support/                  # Техническая поддержка
+│   ├── testing/                  # Тестирование
+│   ├── ui/                       # UI/UX документация
+│   └── index.md                  # Индекс документации
+│
+├── .env.example                  # Пример файла с переменными окружения
+├── .eslintrc.js                  # Конфигурация ESLint
+├── .prettierrc                   # Конфигурация Prettier
+├── docker-compose.yml            # Конфигурация Docker Compose
+├── Dockerfile                    # Dockerfile для сборки образа
+├── nest-cli.json                 # Конфигурация NestJS CLI
+├── package.json                  # Зависимости и скрипты
+├── tsconfig.json                 # Конфигурация TypeScript
+└── README.md                     # Описание проекта
 ```
 
 ## Архитектура коннекторов

@@ -218,365 +218,473 @@
 7. **Swagger/OpenAPI** - инструменты для документирования API
 8. **Git** - система контроля версий
 
-## Структура проекта коннектора
+## Структура проекта коннектора в Make
+
+В Make коннекторы разрабатываются с использованием JSON-конфигурации, которая определяет все аспекты коннектора. Разработка может вестись как в веб-интерфейсе Make, так и с использованием расширения для Visual Studio Code.
+
+### Структура проекта при использовании VS Code
 
 ```
-connector-project/
-├── src/
-│   ├── index.js              # Основной файл коннектора
-│   ├── auth.js               # Конфигурация аутентификации
+my-connector/
+├── app/
+│   ├── app.json              # Основная конфигурация приложения
+│   ├── base.json             # Базовая конфигурация (URL, авторизация)
+│   ├── common.json           # Общие данные для всего приложения
+│   ├── connections/          # Конфигурации подключений
+│   │   ├── oauth2.json       # Конфигурация OAuth 2.0
+│   │   └── ...
 │   ├── modules/              # Модули коннектора
-│   │   ├── contacts.js       # Модуль для работы с контактами
-│   │   ├── deals.js          # Модуль для работы со сделками
+│   │   ├── actions/          # Модули действий
+│   │   │   ├── create.json   # Модуль создания ресурса
+│   │   │   ├── update.json   # Модуль обновления ресурса
+│   │   │   └── ...
+│   │   ├── searches/         # Модули поиска
+│   │   │   ├── list.json     # Модуль получения списка ресурсов
+│   │   │   └── ...
+│   │   ├── triggers/         # Модули триггеров
+│   │   │   ├── new.json      # Триггер новых ресурсов
+│   │   │   └── ...
 │   │   └── ...
-│   ├── api/                  # Адаптеры для внешнего API
-│   │   ├── client.js         # Клиент для работы с API
-│   │   ├── contacts-api.js   # API для работы с контактами
-│   │   ├── deals-api.js      # API для работы со сделками
+│   ├── rpcs/                 # Удаленные вызовы процедур
+│   │   ├── dynamic-fields.json  # Динамические поля
+│   │   ├── dynamic-options.json # Динамические опции
 │   │   └── ...
-│   ├── utils/                # Утилиты
-│   │   ├── subscription.js   # Утилиты для проверки подписки
-│   │   ├── error-handler.js  # Обработка ошибок
-│   │   └── ...
-│   └── constants.js          # Константы
+│   └── functions/            # Пользовательские IML функции
+│       ├── subscription.js   # Функция проверки подписки
+│       └── ...
 ├── assets/                   # Ресурсы
-│   ├── icon.png              # Иконка коннектора
-│   └── ...
-├── tests/                    # Тесты
-│   ├── unit/                 # Модульные тесты
-│   │   ├── modules/          # Тесты модулей
-│   │   ├── api/              # Тесты API
-│   │   └── ...
-│   ├── integration/          # Интеграционные тесты
-│   └── ...
-├── docs/                     # Документация
-│   ├── README.md             # Основная документация
-│   ├── USAGE.md              # Руководство по использованию
-│   └── ...
-├── package.json              # Конфигурация npm
-├── tsconfig.json             # Конфигурация TypeScript
-├── jest.config.js            # Конфигурация Jest
-└── README.md                 # Описание проекта
+│   └── icon.png              # Иконка коннектора
+└── package.json              # Метаданные проекта
 ```
 
-## Пример реализации коннектора
+### Основные компоненты коннектора
 
-### Основной файл коннектора
+1. **app.json** - Основной файл с метаданными приложения (имя, описание, версия)
+2. **base.json** - Базовая конфигурация для API (базовый URL, обработка ошибок)
+3. **connections/** - Конфигурации для различных типов подключений (OAuth, API Key и т.д.)
+4. **modules/** - Модули коннектора, разделенные по типам (actions, searches, triggers)
+5. **rpcs/** - Удаленные вызовы процедур для динамического контента
+6. **functions/** - Пользовательские JavaScript функции для сложной логики
 
-```javascript
-// index.js
-const auth = require('./auth');
-const contactsModule = require('./modules/contacts');
-const dealsModule = require('./modules/deals');
+## Примеры реализации коннектора в Make
 
-module.exports = {
-  name: 'MyConnector',
-  label: 'My Connector',
-  description: 'Connector for My Service',
-  icon: './assets/icon.png',
-  version: '1.0.0',
-  authentication: auth,
-  modules: [
-    contactsModule,
-    dealsModule,
-    // Другие модули
-  ]
-};
+В Make коннекторы разрабатываются с использованием JSON-конфигурации. Ниже приведены примеры основных компонентов коннектора.
+
+### Основная конфигурация приложения (app.json)
+
+```json
+{
+  "name": "mycrm",
+  "label": "MyCRM",
+  "version": "1.0.0",
+  "description": "Интеграция с MyCRM для управления контактами и сделками",
+  "language": "ru",
+  "categories": ["crm", "sales"],
+  "icon": "app.png"
+}
 ```
 
-### Конфигурация аутентификации
+### Базовая конфигурация (base.json)
 
-```javascript
-// auth.js
-module.exports = {
-  type: 'oauth2',
-  oauth2Config: {
-    authorizationUrl: 'https://api.example.com/oauth/authorize',
-    tokenUrl: 'https://api.example.com/oauth/token',
-    scope: ['read', 'write'],
-    pkce: true
+```json
+{
+  "url": "https://api.example.com/v1",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
   },
-  fields: [
-    {
-      name: 'clientId',
-      type: 'string',
-      label: 'Client ID',
-      required: true
-    },
-    {
-      name: 'clientSecret',
-      type: 'password',
-      label: 'Client Secret',
-      required: true,
-      sensitive: true
-    },
-    {
-      name: 'bpmCentrApiKey',
-      type: 'string',
-      label: 'BPM Centr API Key',
-      required: true,
-      sensitive: true,
-      help: 'API key from your BPM Centr account to verify subscription'
-    }
-  ],
-  test: {
-    request: {
-      url: 'https://api.example.com/test',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer {{access_token}}'
-      }
-    },
-    response: {
-      status: 200
-    }
+  "error": {
+    "message": "{{body.error.message}}",
+    "type": "{{body.error.type}}",
+    "status": "{{statusCode}}"
   }
-};
+}
 ```
 
-### Модуль коннектора
+### Конфигурация OAuth 2.0 (connections/oauth2.json)
 
-```javascript
-// modules/contacts.js
-const { checkSubscription } = require('../utils/subscription');
-const contactsApi = require('../api/contacts-api');
-
-module.exports = {
-  name: 'contacts',
-  label: 'Contacts',
-  description: 'Work with contacts in the CRM',
-  
-  operations: [
+```json
+{
+  "name": "oauth2",
+  "type": "oauth2",
+  "label": "OAuth 2.0",
+  "oauth2Config": {
+    "authorizationUrl": "https://api.example.com/oauth/authorize",
+    "tokenUrl": "https://api.example.com/oauth/token",
+    "scope": ["read", "write"],
+    "pkce": true
+  },
+  "fields": [
     {
-      name: 'getContact',
-      label: 'Get Contact',
-      description: 'Retrieve a contact by ID',
-      input: {
-        fields: [
-          {
-            name: 'contactId',
-            type: 'string',
-            label: 'Contact ID',
-            required: true
-          }
-        ]
-      },
-      output: {
-        fields: [
-          {
-            name: 'id',
-            type: 'string',
-            label: 'ID'
-          },
-          {
-            name: 'name',
-            type: 'string',
-            label: 'Name'
-          },
-          {
-            name: 'email',
-            type: 'string',
-            label: 'Email'
-          },
-          {
-            name: 'phone',
-            type: 'string',
-            label: 'Phone'
-          },
-          {
-            name: 'createdAt',
-            type: 'date',
-            label: 'Created At'
-          }
-        ]
-      },
-      execute: async function(params, context) {
-        try {
-          // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'my-connector', context);
-          
-          // Выполнение операции
-          const { contactId } = params;
-          const contact = await contactsApi.getContact(contactId, context);
-          
-          return contact;
-        } catch (error) {
-          throw new Error(`Error getting contact: ${error.message}`);
-        }
-      }
+      "name": "clientId",
+      "type": "text",
+      "label": "Client ID",
+      "required": true
     },
-    // Другие операции
+    {
+      "name": "clientSecret",
+      "type": "password",
+      "label": "Client Secret",
+      "required": true,
+      "sensitive": true
+    },
+    {
+      "name": "bpmCentrApiKey",
+      "type": "text",
+      "label": "BPM Centr API Key",
+      "required": true,
+      "sensitive": true,
+      "help": "API ключ из вашего аккаунта BPM Centr для проверки подписки"
+    }
   ],
-  
-  triggers: [
-    {
-      name: 'newContact',
-      label: 'New Contact',
-      description: 'Triggers when a new contact is created',
-      type: 'polling',
-      input: {
-        fields: [
-          {
-            name: 'maxResults',
-            type: 'uinteger',
-            label: 'Max Results',
-            required: false,
-            default: 10
-          }
-        ]
-      },
-      output: {
-        fields: [
-          {
-            name: 'id',
-            type: 'string',
-            label: 'ID'
-          },
-          {
-            name: 'name',
-            type: 'string',
-            label: 'Name'
-          },
-          {
-            name: 'email',
-            type: 'string',
-            label: 'Email'
-          },
-          {
-            name: 'phone',
-            type: 'string',
-            label: 'Phone'
-          },
-          {
-            name: 'createdAt',
-            type: 'date',
-            label: 'Created At'
-          }
-        ]
-      },
-      poll: async function(params, context) {
-        try {
-          // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'my-connector', context);
-          
-          // Выполнение операции
-          const { maxResults } = params;
-          const { lastPollTime } = context.state;
-          
-          const contacts = await contactsApi.getNewContacts(lastPollTime, maxResults, context);
-          
-          // Сохранение времени последнего опроса
-          if (contacts.length > 0) {
-            const lastContact = contacts[contacts.length - 1];
-            context.state.lastPollTime = lastContact.createdAt;
-          }
-          
-          return contacts;
-        } catch (error) {
-          throw new Error(`Error polling for new contacts: ${error.message}`);
-        }
+  "test": {
+    "request": {
+      "url": "/test",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer {{connection.access_token}}"
       }
     },
-    // Другие триггеры
+    "response": {
+      "status": 200
+    }
+  }
+}
+```
+
+### Модуль действия (modules/actions/get-contact.json)
+
+```json
+{
+  "name": "getContact",
+  "label": "Получить контакт",
+  "description": "Получает информацию о контакте по ID",
+  "connection": "oauth2",
+
+  "parameters": [
+    {
+      "name": "contactId",
+      "type": "text",
+      "label": "ID контакта",
+      "required": true
+    }
+  ],
+
+  "communication": {
+    "url": "/contacts/{{parameters.contactId}}",
+    "method": "GET",
+    "headers": {
+      "Authorization": "Bearer {{connection.access_token}}"
+    },
+    "response": {
+      "output": {
+        "id": "{{body.id}}",
+        "name": "{{body.name}}",
+        "email": "{{body.email}}",
+        "phone": "{{body.phone}}",
+        "createdAt": "{{formatDate(body.created_at, 'YYYY-MM-DD')}}"
+      },
+      "wrapper": {
+        "data": "{{output}}",
+        "subscription": "{{checkSubscription(connection.bpmCentrApiKey, 'mycrm')}}"
+      }
+    }
+  },
+
+  "expect": [
+    {
+      "name": "contactId",
+      "type": "text",
+      "label": "ID контакта",
+      "required": true
+    }
+  ],
+
+  "interface": [
+    {
+      "name": "id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Имя"
+    },
+    {
+      "name": "email",
+      "type": "email",
+      "label": "Email"
+    },
+    {
+      "name": "phone",
+      "type": "text",
+      "label": "Телефон"
+    },
+    {
+      "name": "createdAt",
+      "type": "date",
+      "label": "Дата создания"
+    }
+  ],
+
+  "samples": {
+    "id": "12345",
+    "name": "Иван Петров",
+    "email": "ivan@example.com",
+    "phone": "+7 (999) 123-45-67",
+    "createdAt": "2023-01-15"
+  }
+}
+```
+
+### Модуль поиска (modules/searches/list-contacts.json)
+
+```json
+{
+  "name": "listContacts",
+  "label": "Список контактов",
+  "description": "Получает список контактов с возможностью фильтрации",
+  "connection": "oauth2",
+
+  "parameters": [
+    {
+      "name": "query",
+      "type": "text",
+      "label": "Поисковый запрос",
+      "required": false
+    },
+    {
+      "name": "limit",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "communication": {
+    "url": "/contacts",
+    "method": "GET",
+    "params": {
+      "q": "{{parameters.query}}",
+      "limit": "{{parameters.limit}}"
+    },
+    "headers": {
+      "Authorization": "Bearer {{connection.access_token}}"
+    },
+    "response": {
+      "iterate": "{{body.contacts}}",
+      "output": {
+        "id": "{{item.id}}",
+        "name": "{{item.name}}",
+        "email": "{{item.email}}",
+        "phone": "{{item.phone}}",
+        "createdAt": "{{formatDate(item.created_at, 'YYYY-MM-DD')}}"
+      }
+    },
+    "pagination": {
+      "mergeWithParent": true,
+      "rel": "next",
+      "type": "link",
+      "url": "{{headers.link}}"
+    }
+  },
+
+  "expect": [
+    {
+      "name": "query",
+      "type": "text",
+      "label": "Поисковый запрос",
+      "required": false
+    },
+    {
+      "name": "limit",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "interface": [
+    {
+      "name": "id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Имя"
+    },
+    {
+      "name": "email",
+      "type": "email",
+      "label": "Email"
+    },
+    {
+      "name": "phone",
+      "type": "text",
+      "label": "Телефон"
+    },
+    {
+      "name": "createdAt",
+      "type": "date",
+      "label": "Дата создания"
+    }
+  ],
+
+  "samples": [
+    {
+      "id": "12345",
+      "name": "Иван Петров",
+      "email": "ivan@example.com",
+      "phone": "+7 (999) 123-45-67",
+      "createdAt": "2023-01-15"
+    },
+    {
+      "id": "12346",
+      "name": "Мария Сидорова",
+      "email": "maria@example.com",
+      "phone": "+7 (999) 765-43-21",
+      "createdAt": "2023-02-20"
+    }
   ]
-};
+}
 ```
 
-### Утилита для проверки подписки
+### Модуль триггера (modules/triggers/new-contact.json)
 
-```javascript
-// utils/subscription.js
-async function checkSubscription(bpmCentrApiKey, connectorName, context) {
-  try {
-    // Запрос к API BPM Centr для проверки подписки
-    const response = await context.http.get({
-      url: 'https://api.bpmcentr.ru/subscription/check',
-      headers: {
-        'Authorization': `Bearer ${bpmCentrApiKey}`
-      },
-      params: {
-        connector: connectorName
-      }
-    });
-    
-    // Проверка результата
-    if (response.statusCode !== 200 || !response.body.active) {
-      throw new Error('Your subscription is inactive or expired. Please renew your subscription at BPM Centr.');
+```json
+{
+  "name": "newContact",
+  "label": "Новый контакт",
+  "description": "Срабатывает при создании нового контакта",
+  "connection": "oauth2",
+  "type": "polling",
+
+  "parameters": [
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
     }
-    
-    return true;
-  } catch (error) {
-    throw new Error(`Subscription check failed: ${error.message}`);
-  }
-}
+  ],
 
-module.exports = {
-  checkSubscription
-};
+  "communication": {
+    "url": "/contacts",
+    "method": "GET",
+    "params": {
+      "created_after": "{{formatDate(state.lastPollTime, 'YYYY-MM-DDTHH:mm:ss')}}",
+      "limit": "{{parameters.maxResults}}",
+      "sort": "created_at",
+      "order": "asc"
+    },
+    "headers": {
+      "Authorization": "Bearer {{connection.access_token}}"
+    },
+    "response": {
+      "iterate": "{{body.contacts}}",
+      "output": {
+        "id": "{{item.id}}",
+        "name": "{{item.name}}",
+        "email": "{{item.email}}",
+        "phone": "{{item.phone}}",
+        "createdAt": "{{formatDate(item.created_at, 'YYYY-MM-DD')}}"
+      },
+      "state": {
+        "lastPollTime": "{{iterate.container.last.created_at}}"
+      }
+    }
+  },
+
+  "expect": [
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "interface": [
+    {
+      "name": "id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Имя"
+    },
+    {
+      "name": "email",
+      "type": "email",
+      "label": "Email"
+    },
+    {
+      "name": "phone",
+      "type": "text",
+      "label": "Телефон"
+    },
+    {
+      "name": "createdAt",
+      "type": "date",
+      "label": "Дата создания"
+    }
+  ],
+
+  "samples": [
+    {
+      "id": "12345",
+      "name": "Иван Петров",
+      "email": "ivan@example.com",
+      "phone": "+7 (999) 123-45-67",
+      "createdAt": "2023-01-15"
+    }
+  ]
+}
 ```
 
-### Адаптер для API
+### Пользовательская IML функция для проверки подписки (functions/subscription.js)
 
 ```javascript
-// api/contacts-api.js
-async function getContact(contactId, context) {
-  try {
-    const response = await context.http.get({
-      url: `https://api.example.com/contacts/${contactId}`,
-      headers: {
-        'Authorization': `Bearer ${context.auth.access_token}`
-      }
-    });
-    
-    if (response.statusCode !== 200) {
-      throw new Error(`Failed to get contact: ${response.body.error || 'Unknown error'}`);
-    }
-    
-    return mapContactResponse(response.body);
-  } catch (error) {
-    throw new Error(`Error in getContact: ${error.message}`);
+/**
+ * Проверяет статус подписки через API BPM Centr
+ * @param {string} apiKey - API ключ BPM Centr
+ * @param {string} connectorName - Имя коннектора
+ * @returns {boolean} - Статус подписки
+ */
+function checkSubscription(apiKey, connectorName) {
+  if (!apiKey) {
+    throw new Error('API ключ BPM Centr не указан');
   }
-}
 
-async function getNewContacts(lastPollTime, maxResults, context) {
-  try {
-    const response = await context.http.get({
-      url: 'https://api.example.com/contacts',
-      headers: {
-        'Authorization': `Bearer ${context.auth.access_token}`
-      },
-      params: {
-        created_after: lastPollTime,
-        limit: maxResults,
-        sort: 'created_at',
-        order: 'asc'
-      }
-    });
-    
-    if (response.statusCode !== 200) {
-      throw new Error(`Failed to get contacts: ${response.body.error || 'Unknown error'}`);
+  const response = $http.get({
+    url: 'https://api.bpmcentr.com/subscription/check',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`
+    },
+    params: {
+      connector: connectorName
     }
-    
-    return response.body.contacts.map(mapContactResponse);
-  } catch (error) {
-    throw new Error(`Error in getNewContacts: ${error.message}`);
+  });
+
+  if (response.statusCode !== 200) {
+    throw new Error(`Ошибка проверки подписки: ${response.body.error || 'Неизвестная ошибка'}`);
   }
-}
 
-function mapContactResponse(data) {
-  return {
-    id: data.id,
-    name: data.name,
-    email: data.email,
-    phone: data.phone,
-    createdAt: new Date(data.created_at).toISOString()
-  };
-}
+  if (!response.body.active) {
+    throw new Error('Ваша подписка неактивна или истекла. Пожалуйста, обновите подписку в BPM Centr.');
+  }
 
-module.exports = {
-  getContact,
-  getNewContacts
-};
+  return true;
+}
 ```
 
 ## Лучшие практики

@@ -23,73 +23,75 @@
 
 ```javascript
 // subscription.test.js
-const { checkSubscription } = require('../utils/subscription');
+const { checkSubscription } = require('../app/functions/subscription');
 const nock = require('nock');
 
 describe('Subscription Utils', () => {
   describe('checkSubscription', () => {
-    it('should return true for active subscription', async () => {
-      // Arrange
-      const bpmCentrApiKey = 'test-api-key';
-      const connectorName = 'test-connector';
-      const context = {
-        http: {
-          get: jest.fn().mockResolvedValue({
-            statusCode: 200,
-            body: { active: true }
-          })
-        }
+    beforeEach(() => {
+      // Мокируем глобальную функцию $http.get, которая используется в IML функциях
+      global.$http = {
+        get: jest.fn()
       };
-      
+    });
+
+    it('should return true for active subscription', () => {
+      // Arrange
+      const apiKey = 'test-api-key';
+      const connectorName = 'test-connector';
+
+      // Мокируем ответ от API
+      global.$http.get.mockReturnValue({
+        statusCode: 200,
+        body: { active: true }
+      });
+
       // Act
-      const result = await checkSubscription(bpmCentrApiKey, connectorName, context);
-      
+      const result = checkSubscription(apiKey, connectorName);
+
       // Assert
       expect(result).toBe(true);
-      expect(context.http.get).toHaveBeenCalledWith({
-        url: 'https://api.bpmcentr.ru/subscription/check',
+      expect(global.$http.get).toHaveBeenCalledWith({
+        url: 'https://api.bpmcentr.com/subscription/check',
         headers: {
-          'Authorization': `Bearer ${bpmCentrApiKey}`
+          'Authorization': `Bearer ${apiKey}`
         },
         params: {
           connector: connectorName
         }
       });
     });
-    
-    it('should throw error for inactive subscription', async () => {
+
+    it('should throw error for inactive subscription', () => {
       // Arrange
-      const bpmCentrApiKey = 'test-api-key';
+      const apiKey = 'test-api-key';
       const connectorName = 'test-connector';
-      const context = {
-        http: {
-          get: jest.fn().mockResolvedValue({
-            statusCode: 200,
-            body: { active: false }
-          })
-        }
-      };
-      
+
+      // Мокируем ответ от API
+      global.$http.get.mockReturnValue({
+        statusCode: 200,
+        body: { active: false }
+      });
+
       // Act & Assert
-      await expect(checkSubscription(bpmCentrApiKey, connectorName, context))
-        .rejects
-        .toThrow('Your subscription is inactive or expired. Please renew your subscription at BPM Centr.');
+      expect(() => checkSubscription(apiKey, connectorName))
+        .toThrow('Ваша подписка неактивна или истекла. Пожалуйста, обновите подписку в BPM Centr.');
     });
-    
-    it('should throw error when API returns error', async () => {
+
+    it('should throw error when API returns error', () => {
       // Arrange
-      const bpmCentrApiKey = 'test-api-key';
+      const apiKey = 'test-api-key';
       const connectorName = 'test-connector';
-      const context = {
-        http: {
-          get: jest.fn().mockRejectedValue(new Error('API error'))
-        }
-      };
-      
+
+      // Мокируем ответ от API с ошибкой
+      global.$http.get.mockReturnValue({
+        statusCode: 400,
+        body: { error: 'API error' }
+      });
+
       // Act & Assert
-      await expect(checkSubscription(bpmCentrApiKey, connectorName, context))
-        .rejects
-        .toThrow('Subscription check failed: API error');
+      expect(() => checkSubscription(apiKey, connectorName))
+        .toThrow('Ошибка проверки подписки: API error');
     });
   });
 });
@@ -113,77 +115,126 @@ describe('Subscription Utils', () => {
 **Пример интеграционного теста**:
 
 ```javascript
-// contacts-module.test.js
-const contactsModule = require('../modules/contacts');
+// get-contact.test.js
 const nock = require('nock');
+const fs = require('fs');
+const path = require('path');
 
-describe('Contacts Module', () => {
+// Загружаем JSON-конфигурацию модуля
+const getContactModule = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../app/modules/actions/get-contact.json'), 'utf8')
+);
+
+// Мокируем глобальные функции Make
+global.checkSubscription = jest.fn();
+
+describe('Get Contact Module', () => {
   beforeEach(() => {
-    // Мокируем API BPM Centr для проверки подписки
-    nock('https://api.bpmcentr.ru')
-      .get('/subscription/check')
-      .query({ connector: 'my-connector' })
-      .reply(200, { active: true });
-    
-    // Мокируем внешний API
-    nock('https://api.example.com')
+    // Мокируем API для получения контакта
+    nock('https://api.example.com/v1')
       .get('/contacts/12345')
       .reply(200, {
         id: '12345',
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+1234567890',
+        name: 'Иван Петров',
+        email: 'ivan@example.com',
+        phone: '+7 (999) 123-45-67',
         created_at: '2023-01-15T10:30:00Z'
       });
+
+    // Сбрасываем моки между тестами
+    global.checkSubscription.mockReset();
+    global.checkSubscription.mockReturnValue(true);
   });
-  
+
   afterEach(() => {
     nock.cleanAll();
   });
-  
-  describe('getContact operation', () => {
-    it('should retrieve contact by ID', async () => {
+
+  describe('communication section', () => {
+    it('should correctly format the request URL', () => {
       // Arrange
-      const params = { contactId: '12345' };
-      const context = {
-        auth: {
-          bpmCentrApiKey: 'test-api-key',
-          access_token: 'test-access-token'
-        },
-        http: {
-          get: jest.fn().mockImplementation((options) => {
-            if (options.url === 'https://api.bpmcentr.ru/subscription/check') {
-              return Promise.resolve({
-                statusCode: 200,
-                body: { active: true }
-              });
-            } else if (options.url === 'https://api.example.com/contacts/12345') {
-              return Promise.resolve({
-                statusCode: 200,
-                body: {
-                  id: '12345',
-                  name: 'John Doe',
-                  email: 'john@example.com',
-                  phone: '+1234567890',
-                  created_at: '2023-01-15T10:30:00Z'
-                }
-              });
-            }
-          })
-        }
+      const parameters = {
+        contactId: '12345'
       };
-      
-      // Act
-      const result = await contactsModule.operations.find(op => op.name === 'getContact').execute(params, context);
-      
+      const connection = {
+        apiKey: 'test-api-key',
+        bpmCentrApiKey: 'test-bpm-api-key'
+      };
+
+      // Проверяем URL запроса
+      const url = getContactModule.communication.url;
+      const formattedUrl = url.replace('{{parameters.contactId}}', parameters.contactId);
+
       // Assert
-      expect(result).toEqual({
+      expect(formattedUrl).toBe('/contacts/12345');
+    });
+
+    it('should correctly map response to output', () => {
+      // Arrange
+      const responseBody = {
         id: '12345',
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+1234567890',
-        createdAt: '2023-01-15T10:30:00Z'
+        name: 'Иван Петров',
+        email: 'ivan@example.com',
+        phone: '+7 (999) 123-45-67',
+        created_at: '2023-01-15T10:30:00Z'
+      };
+
+      // Имитируем обработку ответа согласно конфигурации
+      const output = {};
+      const outputMapping = getContactModule.communication.response.output;
+
+      // Применяем маппинг (упрощенная версия того, что делает Make)
+      for (const [key, value] of Object.entries(outputMapping)) {
+        // Заменяем {{body.field}} на значение из responseBody
+        const match = value.match(/{{body\.([^}]+)}}/);
+        if (match) {
+          const fieldName = match[1];
+          output[key] = responseBody[fieldName];
+        } else if (value.includes('formatDate')) {
+          // Упрощенная обработка форматирования даты
+          const dateMatch = value.match(/formatDate\(body\.([^,]+)/);
+          if (dateMatch) {
+            const fieldName = dateMatch[1];
+            output[key] = responseBody[fieldName].split('T')[0]; // Упрощенное форматирование
+          }
+        }
+      }
+
+      // Assert
+      expect(output).toEqual({
+        id: '12345',
+        name: 'Иван Петров',
+        email: 'ivan@example.com',
+        phone: '+7 (999) 123-45-67',
+        createdAt: '2023-01-15T10:30:00Z' // Предполагаем, что форматирование даты работает
       });
+    });
+
+    it('should check subscription status', () => {
+      // Arrange
+      const connection = {
+        bpmCentrApiKey: 'test-bpm-api-key'
+      };
+
+      // Имитируем вызов проверки подписки из wrapper
+      const wrapper = getContactModule.communication.response.wrapper;
+      const subscriptionCheck = wrapper.subscription;
+
+      // Извлекаем параметры вызова функции checkSubscription
+      const match = subscriptionCheck.match(/checkSubscription\(([^,]+),\s*'([^']+)'/);
+      const apiKeyParam = match[1];
+      const connectorNameParam = match[2];
+
+      // Проверяем, что параметры соответствуют ожидаемым
+      expect(apiKeyParam).toBe('connection.bpmCentrApiKey');
+      expect(connectorNameParam).toBe('mycrm');
+
+      // Имитируем вызов функции с реальными параметрами
+      const result = global.checkSubscription(connection.bpmCentrApiKey, 'mycrm');
+
+      // Assert
+      expect(global.checkSubscription).toHaveBeenCalledWith(connection.bpmCentrApiKey, 'mycrm');
+      expect(result).toBe(true);
     });
   });
 });
@@ -209,50 +260,104 @@ describe('Contacts Module', () => {
 ```javascript
 // Пример тестового сценария в Make
 const scenario = {
-  name: 'Test Contact Creation',
-  modules: [
-    {
-      type: 'trigger',
-      connector: 'core',
-      operation: 'httpRequest',
-      parameters: {
-        url: 'https://webhook.site/your-webhook-id',
-        method: 'GET'
+  name: 'Тестирование создания контакта',
+  blueprint: {
+    modules: [
+      {
+        name: 'webhook',
+        type: 'trigger',
+        provider: 'builtin',
+        connection: 'webhook',
+        metadata: {
+          designer: {
+            x: 0,
+            y: 0
+          }
+        },
+        parameters: {
+          mode: 'simple'
+        }
+      },
+      {
+        name: 'createContact',
+        type: 'action',
+        provider: 'mycrm',
+        connection: 'api_key',
+        metadata: {
+          designer: {
+            x: 300,
+            y: 0
+          }
+        },
+        parameters: {
+          name: 'Тестовый контакт',
+          email: 'test@example.com',
+          phone: '+7 (999) 123-45-67'
+        }
+      },
+      {
+        name: 'getContact',
+        type: 'action',
+        provider: 'mycrm',
+        connection: 'api_key',
+        metadata: {
+          designer: {
+            x: 600,
+            y: 0
+          }
+        },
+        parameters: {
+          contactId: '{{2.id}}'
+        }
       }
-    },
-    {
-      type: 'action',
-      connector: 'MyConnector',
-      operation: 'createContact',
-      parameters: {
-        name: 'Test Contact',
-        email: 'test@example.com',
-        phone: '+1234567890'
+    ],
+    connections: [
+      {
+        from: {
+          moduleId: 1,
+          port: 'output'
+        },
+        to: {
+          moduleId: 2,
+          port: 'input'
+        }
+      },
+      {
+        from: {
+          moduleId: 2,
+          port: 'output'
+        },
+        to: {
+          moduleId: 3,
+          port: 'input'
+        }
       }
-    },
-    {
-      type: 'action',
-      connector: 'MyConnector',
-      operation: 'getContact',
-      parameters: {
-        contactId: '{{2.id}}'
-      }
-    }
-  ]
+    ]
+  }
 };
 
 // Запуск сценария и проверка результатов
 async function testScenario() {
-  const result = await makeApi.runScenario(scenario);
-  
+  // Создаем сценарий через Make API
+  const createdScenario = await makeApi.createScenario(scenario);
+
+  // Запускаем сценарий
+  const execution = await makeApi.executeScenario(createdScenario.id);
+
+  // Получаем результаты выполнения
+  const result = await makeApi.getExecutionResult(execution.id);
+
   // Проверка результатов
   expect(result.modules[1].output.id).toBeDefined();
-  expect(result.modules[1].output.name).toBe('Test Contact');
+  expect(result.modules[1].output.name).toBe('Тестовый контакт');
   expect(result.modules[1].output.email).toBe('test@example.com');
-  
+
   expect(result.modules[2].output.id).toBe(result.modules[1].output.id);
-  expect(result.modules[2].output.name).toBe('Test Contact');
+  expect(result.modules[2].output.name).toBe('Тестовый контакт');
   expect(result.modules[2].output.email).toBe('test@example.com');
+
+  // Удаляем тестовый сценарий
+  await makeApi.deleteScenario(createdScenario.id);
 }
 ```
 
@@ -276,38 +381,44 @@ async function testScenario() {
 ```yaml
 # artillery-test.yml
 config:
-  target: "https://api.bpmcentr.com"
+  target: "https://api.example.com/v1"
   phases:
     - duration: 60
       arrivalRate: 5
       rampTo: 20
-      name: "Warm up"
+      name: "Разогрев"
     - duration: 120
       arrivalRate: 20
-      name: "Sustained load"
+      name: "Постоянная нагрузка"
   defaults:
     headers:
-      Authorization: "Bearer {{apiKey}}"
+      X-API-Key: "{{apiKey}}"
       Content-Type: "application/json"
   variables:
     apiKey: "test-api-key"
 
 scenarios:
-  - name: "Get and create contacts"
+  - name: "Получение и создание контактов"
     flow:
       - get:
-          url: "/v1/connectors/my-connector/contacts?limit=10"
+          url: "/contacts?limit=10"
           capture:
             - json: "$.items[0].id"
               as: "contactId"
       - get:
-          url: "/v1/connectors/my-connector/contacts/{{contactId}}"
+          url: "/contacts/{{contactId}}"
       - post:
-          url: "/v1/connectors/my-connector/contacts"
+          url: "/contacts"
           json:
-            name: "Test Contact"
+            name: "Тестовый контакт"
             email: "test-{{$randomString(10)}}@example.com"
-            phone: "+1234567890"
+            phone: "+7 (999) 123-45-67"
+      - think: 1
+      - get:
+          url: "/contacts?query=Тестовый"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
 ```
 
 ## Методология тестирования

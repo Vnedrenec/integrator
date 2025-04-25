@@ -10,385 +10,457 @@ CRM-коннекторы обеспечивают интеграцию межд�
 
 ### Структура коннектора
 
-```javascript
-// index.js
-const auth = require('./auth');
-const contactsModule = require('./modules/contacts');
-const dealsModule = require('./modules/deals');
-const tasksModule = require('./modules/tasks');
-const { checkSubscription } = require('./utils/subscription');
+Коннектор для Creatio CRM состоит из следующих основных файлов:
 
-module.exports = {
-  name: 'creatio',
-  label: 'Creatio CRM',
-  description: 'Connector for Creatio CRM',
-  icon: './assets/icon.png',
-  version: '1.0.0',
-  authentication: auth,
-  modules: [
-    contactsModule,
-    dealsModule,
-    tasksModule
-  ]
-};
+```
+creatio-connector/
+├── app/
+│   ├── app.json              # Основная конфигурация приложения
+│   ├── base.json             # Базовая конфигурация (URL, авторизация)
+│   ├── common.json           # Общие данные для всего приложения
+│   ├── connections/          # Конфигурации подключений
+│   │   ├── oauth2.json       # Конфигурация OAuth 2.0
+│   │   └── ...
+│   ├── modules/              # Модули коннектора
+│   │   ├── actions/          # Модули действий
+│   │   │   ├── get-contact.json   # Получение контакта
+│   │   │   ├── create-contact.json # Создание контакта
+│   │   │   └── ...
+│   │   ├── searches/         # Модули поиска
+│   │   │   ├── list-contacts.json # Получение списка контактов
+│   │   │   └── ...
+│   │   ├── triggers/         # Модули триггеров
+│   │   │   ├── new-contact.json # Триггер новых контактов
+│   │   │   └── ...
+│   │   └── ...
+│   ├── rpcs/                 # Удаленные вызовы процедур
+│   │   ├── dynamic-fields.json  # Динамические поля
+│   │   └── ...
+│   └── functions/            # Пользовательские IML функции
+│       ├── subscription.js   # Функция проверки подписки
+│       └── ...
+└── assets/                   # Ресурсы
+    └── icon.png              # Иконка коннектора
 ```
 
-### Конфигурация аутентификации
+### Основная конфигурация приложения (app.json)
 
-```javascript
-// auth.js
-module.exports = {
-  type: 'oauth2',
-  oauth2Config: {
-    authorizationUrl: 'https://{instance}.creatio.com/0/ServiceModel/AuthService.svc/Login',
-    tokenUrl: 'https://{instance}.creatio.com/0/ServiceModel/AuthService.svc/Token',
-    scope: ['General'],
-    pkce: false
+```json
+{
+  "name": "creatio",
+  "label": "Creatio CRM",
+  "version": "1.0.0",
+  "description": "Коннектор для Creatio CRM",
+  "language": "ru",
+  "categories": ["crm", "sales"],
+  "icon": "app.png",
+  "author": "BPM Centr",
+  "website": "https://bpmcentr.com",
+  "docs": "https://docs.bpmcentr.com/connectors/creatio"
+}
+```
+
+### Базовая конфигурация (base.json)
+
+```json
+{
+  "url": "https://{connection.instance}.creatio.com/0/ServiceModel/EntityDataService.svc",
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
   },
-  fields: [
-    {
-      name: 'instance',
-      type: 'string',
-      label: 'Creatio Instance',
-      required: true,
-      help: 'Ваш поддомен Creatio (например, company.creatio.com)'
-    },
-    {
-      name: 'clientId',
-      type: 'string',
-      label: 'Client ID',
-      required: true
-    },
-    {
-      name: 'clientSecret',
-      type: 'password',
-      label: 'Client Secret',
-      required: true,
-      sensitive: true
-    },
-    {
-      name: 'bpmCentrApiKey',
-      type: 'string',
-      label: 'BPM Centr API Key',
-      required: true,
-      sensitive: true,
-      help: 'API key from your BPM Centr account to verify subscription'
-    }
-  ],
-  test: {
-    request: {
-      url: 'https://{instance}.creatio.com/0/ServiceModel/EntityDataService.svc/Contact?$top=1',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer {{access_token}}'
-      }
-    },
-    response: {
-      status: 200
-    }
+  "error": {
+    "message": "{{body.error.message}}",
+    "type": "{{body.error.type}}",
+    "status": "{{statusCode}}"
   }
-};
+}
 ```
 
-### Модуль для работы с контактами
+### Конфигурация OAuth 2.0 (connections/oauth2.json)
 
-```javascript
-// modules/contacts.js
-const { checkSubscription } = require('../utils/subscription');
-const contactsApi = require('../api/contacts-api');
-
-module.exports = {
-  name: 'contacts',
-  label: 'Contacts',
-  description: 'Work with contacts in Creatio CRM',
-  operations: [
+```json
+{
+  "name": "oauth2",
+  "type": "oauth2",
+  "label": "OAuth 2.0",
+  "oauth2Config": {
+    "authorizationUrl": "https://{instance}.creatio.com/0/ServiceModel/AuthService.svc/Login",
+    "tokenUrl": "https://{instance}.creatio.com/0/ServiceModel/AuthService.svc/Token",
+    "scope": ["General"],
+    "pkce": false
+  },
+  "fields": [
     {
-      name: 'getContact',
-      label: 'Get Contact',
-      description: 'Retrieve a contact by ID',
-      input: {
-        fields: [
-          {
-            name: 'contactId',
-            type: 'string',
-            label: 'Contact ID',
-            required: true
-          }
-        ]
-      },
-      output: {
-        fields: [
-          {
-            name: 'Id',
-            type: 'string',
-            label: 'ID'
-          },
-          {
-            name: 'Name',
-            type: 'string',
-            label: 'Full Name'
-          },
-          {
-            name: 'Email',
-            type: 'string',
-            label: 'Email'
-          },
-          {
-            name: 'MobilePhone',
-            type: 'string',
-            label: 'Phone'
-          },
-          {
-            name: 'CreatedOn',
-            type: 'date',
-            label: 'Created At'
-          }
-        ]
-      },
-      execute: async function(params, context) {
-        try {
-          // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'creatio', context);
-
-          // Выполнение операции
-          const { contactId } = params;
-          const { instance, access_token } = context.auth;
-
-          const contact = await contactsApi.getContact(instance, access_token, contactId, context);
-
-          return contact;
-        } catch (error) {
-          throw new Error(`Error getting contact: ${error.message}`);
-        }
-      }
+      "name": "instance",
+      "type": "text",
+      "label": "Creatio Instance",
+      "required": true,
+      "help": "Ваш поддомен Creatio (например, company.creatio.com)"
     },
     {
-      name: 'createContact',
-      label: 'Create Contact',
-      description: 'Create a new contact',
-      input: {
-        fields: [
-          {
-            name: 'Name',
-            type: 'string',
-            label: 'Full Name',
-            required: true
-          },
-          {
-            name: 'Email',
-            type: 'string',
-            label: 'Email',
-            required: false
-          },
-          {
-            name: 'MobilePhone',
-            type: 'string',
-            label: 'Phone',
-            required: false
-          }
-        ]
-      },
-      output: {
-        fields: [
-          {
-            name: 'Id',
-            type: 'string',
-            label: 'ID'
-          },
-          {
-            name: 'Name',
-            type: 'string',
-            label: 'Full Name'
-          },
-          {
-            name: 'Email',
-            type: 'string',
-            label: 'Email'
-          },
-          {
-            name: 'MobilePhone',
-            type: 'string',
-            label: 'Phone'
-          },
-          {
-            name: 'CreatedOn',
-            type: 'date',
-            label: 'Created At'
-          }
-        ]
-      },
-      execute: async function(params, context) {
-        try {
-          await checkSubscription(context.auth.bpmCentrApiKey, 'creatio', context);
-          const { instance, access_token } = context.auth;
-          const contact = await contactsApi.createContact(instance, access_token, params, context);
-          return contact;
-        } catch (error) {
-          throw new Error(`Error creating contact: ${error.message}`);
-        }
-      }
+      "name": "clientId",
+      "type": "text",
+      "label": "Client ID",
+      "required": true
     },
     {
-      name: 'getNewContacts',
-      label: 'Get New Contacts',
-      description: 'Get contacts created after a specific date',
-      input: {
-        fields: [
-          {
-            name: 'since',
-            type: 'date',
-            label: 'Created Since',
-            required: false
-          },
-          {
-            name: 'maxResults',
-            type: 'uinteger',
-            label: 'Max Results',
-            required: false,
-            default: 10
-          }
-        ]
-      },
-      output: {
-        fields: [
-          {
-            name: 'Id',
-            type: 'string',
-            label: 'ID'
-          },
-          {
-            name: 'Name',
-            type: 'string',
-            label: 'Full Name'
-          },
-          {
-            name: 'Email',
-            type: 'string',
-            label: 'Email'
-          },
-          {
-            name: 'MobilePhone',
-            type: 'string',
-            label: 'Phone'
-          },
-          {
-            name: 'CreatedOn',
-            type: 'date',
-            label: 'Created At'
-          }
-        ]
-      },
-      poll: async function(params, context) {
-        try {
-          await checkSubscription(context.auth.bpmCentrApiKey, 'creatio', context);
-          const { instance, access_token } = context.auth;
-          const { since, maxResults } = params;
-          const contacts = await contactsApi.getNewContacts(instance, access_token, since, maxResults, context);
-          return contacts;
-        } catch (error) {
-          throw new Error(`Error polling for new contacts: ${error.message}`);
-        }
+      "name": "clientSecret",
+      "type": "password",
+      "label": "Client Secret",
+      "required": true,
+      "sensitive": true
+    },
+    {
+      "name": "bpmCentrApiKey",
+      "type": "text",
+      "label": "BPM Centr API Key",
+      "required": true,
+      "sensitive": true,
+      "help": "API ключ из вашего аккаунта BPM Centr для проверки подписки"
+    }
+  ],
+  "test": {
+    "request": {
+      "url": "/Contact?$top=1",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer {{connection.access_token}}"
       }
+    },
+    "response": {
+      "status": 200
+    }
+  }
+}
+```
+
+### Модуль действия для получения контакта (modules/actions/get-contact.json)
+
+```json
+{
+  "name": "getContact",
+  "label": "Получить контакт",
+  "description": "Получает информацию о контакте по ID",
+  "connection": "oauth2",
+
+  "parameters": [
+    {
+      "name": "contactId",
+      "type": "text",
+      "label": "ID контакта",
+      "required": true
     }
   ],
 
-  triggers: [
-    // Триггеры для Creatio (например, новый контакт, обновление контакта)
+  "communication": {
+    "url": "/Contact(guid'{{parameters.contactId}}')",
+    "method": "GET",
+    "headers": {
+      "Authorization": "Bearer {{connection.access_token}}"
+    },
+    "response": {
+      "output": {
+        "Id": "{{body.Id}}",
+        "Name": "{{body.Name}}",
+        "Email": "{{body.Email}}",
+        "MobilePhone": "{{body.MobilePhone}}",
+        "CreatedOn": "{{formatDate(body.CreatedOn, 'YYYY-MM-DD')}}"
+      },
+      "wrapper": {
+        "data": "{{output}}",
+        "subscription": "{{checkSubscription(connection.bpmCentrApiKey, 'creatio')}}"
+      }
+    }
+  },
+
+  "expect": [
+    {
+      "name": "contactId",
+      "type": "text",
+      "label": "ID контакта",
+      "required": true
+    }
+  ],
+
+  "interface": [
+    {
+      "name": "Id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "label": "Полное имя"
+    },
+    {
+      "name": "Email",
+      "type": "email",
+      "label": "Email"
+    },
+    {
+      "name": "MobilePhone",
+      "type": "text",
+      "label": "Телефон"
+    },
+    {
+      "name": "CreatedOn",
+      "type": "date",
+      "label": "Дата создания"
+    }
+  ],
+
+  "samples": {
+    "Id": "00000000-0000-0000-0000-000000000000",
+    "Name": "Иван Петров",
+    "Email": "ivan@example.com",
+    "MobilePhone": "+7 (999) 123-45-67",
+    "CreatedOn": "2023-01-15"
+  }
+}
+```
+
+### Модуль поиска для получения списка контактов (modules/searches/list-contacts.json)
+
+```json
+{
+  "name": "listContacts",
+  "label": "Список контактов",
+  "description": "Получает список контактов с возможностью фильтрации",
+  "connection": "oauth2",
+
+  "parameters": [
+    {
+      "name": "query",
+      "type": "text",
+      "label": "Поисковый запрос",
+      "required": false
+    },
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "communication": {
+    "url": "/Contact",
+    "method": "GET",
+    "params": {
+      "$filter": "{{parameters.query ? 'contains(Name, \\'' + parameters.query + '\\')' : ''}}",
+      "$top": "{{parameters.maxResults}}",
+      "$orderby": "CreatedOn desc"
+    },
+    "headers": {
+      "Authorization": "Bearer {{connection.access_token}}"
+    },
+    "response": {
+      "iterate": "{{body.value}}",
+      "output": {
+        "Id": "{{item.Id}}",
+        "Name": "{{item.Name}}",
+        "Email": "{{item.Email}}",
+        "MobilePhone": "{{item.MobilePhone}}",
+        "CreatedOn": "{{formatDate(item.CreatedOn, 'YYYY-MM-DD')}}"
+      }
+    }
+  },
+
+  "expect": [
+    {
+      "name": "query",
+      "type": "text",
+      "label": "Поисковый запрос",
+      "required": false
+    },
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "interface": [
+    {
+      "name": "Id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "label": "Полное имя"
+    },
+    {
+      "name": "Email",
+      "type": "email",
+      "label": "Email"
+    },
+    {
+      "name": "MobilePhone",
+      "type": "text",
+      "label": "Телефон"
+    },
+    {
+      "name": "CreatedOn",
+      "type": "date",
+      "label": "Дата создания"
+    }
+  ],
+
+  "samples": [
+    {
+      "Id": "00000000-0000-0000-0000-000000000000",
+      "Name": "Иван Петров",
+      "Email": "ivan@example.com",
+      "MobilePhone": "+7 (999) 123-45-67",
+      "CreatedOn": "2023-01-15"
+    },
+    {
+      "Id": "00000000-0000-0000-0000-000000000001",
+      "Name": "Мария Сидорова",
+      "Email": "maria@example.com",
+      "MobilePhone": "+7 (999) 765-43-21",
+      "CreatedOn": "2023-02-20"
+    }
   ]
-};
+}
 ```
 
-### API-адаптер для работы с контактами
+### Модуль триггера для новых контактов (modules/triggers/new-contact.json)
 
-```javascript
-// api/contacts-api.js
-async function getContact(instance, accessToken, contactId, context) {
-  try {
-    const response = await context.http.get({
-      url: `https://${instance}.creatio.com/0/ServiceModel/EntityDataService.svc/Contact(guid'${contactId}')`,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-    if (response.statusCode !== 200 || !response.body) {
-      throw new Error('Failed to get contact');
+```json
+{
+  "name": "newContact",
+  "label": "Новый контакт",
+  "description": "Срабатывает при создании нового контакта",
+  "connection": "oauth2",
+  "type": "polling",
+
+  "parameters": [
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
     }
-    return response.body;
-  } catch (error) {
-    throw new Error(`Error in getContact: ${error.message}`);
-  }
-}
+  ],
 
-async function createContact(instance, accessToken, contactData, context) {
-  try {
-    const response = await context.http.post({
-      url: `https://${instance}.creatio.com/0/ServiceModel/EntityDataService.svc/Contact`,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
+  "communication": {
+    "url": "/Contact",
+    "method": "GET",
+    "params": {
+      "$filter": "{{state.lastPollTime ? 'CreatedOn gt datetime\\'' + formatDate(state.lastPollTime, 'YYYY-MM-DDTHH:mm:ss') + '\\'' : ''}}",
+      "$top": "{{parameters.maxResults}}",
+      "$orderby": "CreatedOn asc"
+    },
+    "headers": {
+      "Authorization": "Bearer {{connection.access_token}}"
+    },
+    "response": {
+      "iterate": "{{body.value}}",
+      "output": {
+        "Id": "{{item.Id}}",
+        "Name": "{{item.Name}}",
+        "Email": "{{item.Email}}",
+        "MobilePhone": "{{item.MobilePhone}}",
+        "CreatedOn": "{{formatDate(item.CreatedOn, 'YYYY-MM-DD')}}"
       },
-      body: contactData
-    });
-    if (response.statusCode !== 201 || !response.body) {
-      throw new Error('Failed to create contact');
-    }
-    return response.body;
-  } catch (error) {
-    throw new Error(`Error in createContact: ${error.message}`);
-  }
-}
-
-async function getNewContacts(instance, accessToken, since, maxResults, context) {
-  try {
-    let filter = '';
-    if (since) {
-      filter = `$filter=CreatedOn gt ${new Date(since).toISOString()}`;
-    }
-    const response = await context.http.get({
-      url: `https://${instance}.creatio.com/0/ServiceModel/EntityDataService.svc/Contact?${filter}&$top=${maxResults || 10}`,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
+      "state": {
+        "lastPollTime": "{{iterate.container.last.CreatedOn}}"
       }
-    });
-    if (response.statusCode !== 200 || !response.body) {
-      throw new Error('Failed to get contacts');
     }
-    return response.body.value;
-  } catch (error) {
-    throw new Error(`Error in getNewContacts: ${error.message}`);
-  }
-}
+  },
 
-module.exports = {
-  getContact,
-  createContact,
-  getNewContacts
-};
+  "expect": [
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "interface": [
+    {
+      "name": "Id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "label": "Полное имя"
+    },
+    {
+      "name": "Email",
+      "type": "email",
+      "label": "Email"
+    },
+    {
+      "name": "MobilePhone",
+      "type": "text",
+      "label": "Телефон"
+    },
+    {
+      "name": "CreatedOn",
+      "type": "date",
+      "label": "Дата создания"
+    }
+  ],
+
+  "samples": [
+    {
+      "Id": "00000000-0000-0000-0000-000000000000",
+      "Name": "Иван Петров",
+      "Email": "ivan@example.com",
+      "MobilePhone": "+7 (999) 123-45-67",
+      "CreatedOn": "2023-01-15"
+    }
+  ]
+}
 ```
 
-### Утилита для проверки подписки
+### Функция проверки подписки (functions/subscription.js)
 
 ```javascript
-// utils/subscription.js
-async function checkSubscription(bpmCentrApiKey, connectorName, context) {
-  try {
-    // Запрос к API BPM Centr для проверки подписки
-    const response = await context.http.get({
-      url: 'https://api.bpmcentr.ru/subscription/check',
-      headers: {
-        'Authorization': `Bearer ${bpmCentrApiKey}`
-      },
-      params: {
-        connector: connectorName
-      }
-    });
-    if (response.statusCode !== 200 || !response.body.active) {
-      throw new Error('Subscription inactive or not found');
-    }
-    return true;
-  } catch (error) {
-    throw new Error(`Subscription check failed: ${error.message}`);
+/**
+ * Проверяет статус подписки через API BPM Centr
+ * @param {string} apiKey - API ключ BPM Centr
+ * @param {string} connectorName - Имя коннектора
+ * @returns {boolean} - Статус подписки
+ */
+function checkSubscription(apiKey, connectorName) {
+  if (!apiKey) {
+    throw new Error('API ключ BPM Centr не указан');
   }
+
+  const response = $http.get({
+    url: 'https://api.bpmcentr.com/subscription/check',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`
+    },
+    params: {
+      connector: connectorName
+    }
+  });
+
+  if (response.statusCode !== 200) {
+    throw new Error(`Ошибка проверки подписки: ${response.body.error || 'Неизвестная ошибка'}`);
+  }
+
+  if (!response.body.active) {
+    throw new Error('Ваша подписка неактивна или истекла. Пожалуйста, обновите подписку в BPM Centr.');
+  }
+
+  return true;
 }
 ```
 

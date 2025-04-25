@@ -4,15 +4,15 @@
 
 ## Введение
 
-Коннекторы для Make разрабатываются на платформе Make Developer Hub и должны соответствовать требованиям и стандартам как Make, так и BPM Centr. Это руководство поможет вам создавать качественные коннекторы, которые будут успешно интегрироваться с API BPM Centr и предоставлять пользователям удобный доступ к различным системам.
+Коннекторы для Make разрабатываются с использованием Make Developer Hub и должны соответствовать требованиям и стандартам как Make, так и BPM Centr. Это руководство поможет вам создавать качественные коннекторы, которые будут успешно интегрироваться с API BPM Centr и предоставлять пользователям удобный доступ к различным системам.
 
 ## Подготовка к разработке
 
 ### Необходимые аккаунты и доступы
 
 1. **Аккаунт Make** - Зарегистрируйтесь на [Make](https://www.make.com/)
-2. **Доступ к Make Developer Hub** - Запросите доступ к [Make Developer Hub](https://www.make.com/en/developer-platform)
-3. **Аккаунт BPM Centr** - Зарегистрируйтесь на [BPM Centr](https://bpmcentr.ru/)
+2. **Доступ к Make Developer Hub** - Запросите доступ к [Make Developer Hub](https://developers.make.com/)
+3. **Аккаунт BPM Centr** - Зарегистрируйтесь на [BPM Centr](https://bpmcentr.com/)
 4. **API-ключ BPM Centr** - Создайте API-ключ в личном кабинете BPM Centr
 5. **Доступ к целевой системе** - Получите доступ к API системы, для которой разрабатывается коннектор
 
@@ -20,7 +20,7 @@
 
 Перед началом разработки рекомендуется изучить следующую документацию:
 
-1. [Документация Make Developer Hub](https://www.make.com/en/developer-docs)
+1. [Документация Make Developer Hub](https://developers.make.com/custom-apps-documentation/)
 2. [Спецификация API BPM Centr](../api/specification.md)
 3. [Интеграция с Make API](../integrations/make_integration.md)
 4. [Примеры использования API BPM Centr](../integrations/make_api_examples.md)
@@ -28,234 +28,113 @@
 
 ## Структура коннектора
 
-Коннектор для Make должен иметь следующую структуру:
+Коннектор для Make должен иметь следующую структуру файлов:
 
-1. **Метаданные коннектора** - Основная информация о коннекторе (название, описание, иконка)
-2. **Конфигурация аутентификации** - Настройки для аутентификации в целевой системе и BPM Centr
-3. **Модули** - Логические группы функциональности
-4. **Операции** - Действия, которые может выполнять коннектор
-5. **Триггеры** - События, на которые может реагировать коннектор
+```
+my-connector/
+├── app/
+│   ├── app.json              # Основная конфигурация приложения
+│   ├── base.json             # Базовая конфигурация (URL, авторизация)
+│   ├── common.json           # Общие данные для всего приложения
+│   ├── connections/          # Конфигурации подключений
+│   │   ├── api_key.json      # Конфигурация API Key
+│   │   ├── oauth2.json       # Конфигурация OAuth 2.0
+│   │   └── ...
+│   ├── modules/              # Модули коннектора
+│   │   ├── actions/          # Модули действий
+│   │   │   ├── get-item.json # Получение элемента
+│   │   │   └── ...
+│   │   ├── searches/         # Модули поиска
+│   │   │   ├── list-items.json # Получение списка элементов
+│   │   │   └── ...
+│   │   ├── triggers/         # Модули триггеров
+│   │   │   ├── new-item.json # Триггер новых элементов
+│   │   │   └── ...
+│   │   └── ...
+│   ├── rpcs/                 # Удаленные вызовы процедур
+│   │   ├── dynamic-fields.json  # Динамические поля
+│   │   └── ...
+│   └── functions/            # Пользовательские IML функции
+│       ├── subscription.js   # Функция проверки подписки
+│       └── ...
+└── assets/                   # Ресурсы
+    └── icon.png              # Иконка коннектора
+```
+
+Основные компоненты коннектора:
+
+1. **Метаданные коннектора** (app.json) - Основная информация о коннекторе (название, описание, иконка)
+2. **Конфигурация подключений** (connections/*.json) - Настройки для аутентификации в целевой системе и BPM Centr
+3. **Модули** - Логические группы функциональности:
+   - **Действия** (actions) - Операции, которые выполняют действия в целевой системе
+   - **Поиск** (searches) - Операции для поиска и получения данных
+   - **Триггеры** (triggers) - События, на которые может реагировать коннектор
 
 ## Требования к коннекторам
 
 ### Общие требования
 
 1. **Соответствие стандартам Make** - Коннектор должен соответствовать всем требованиям и рекомендациям Make Developer Hub
-2. **Интеграция с API BPM Centr** - Коннектор должен проверять статус подписки и регистрировать использование через API BPM Centr
-3. **Автоматическое определение аккаунта Make** - Коннектор должен корректно определять идентификатор аккаунта Make и проверять привязку
-4. **Безопасность** - Коннектор должен обеспечивать безопасную обработку данных и не хранить чувствительную информацию
-5. **Производительность** - Коннектор должен быть оптимизирован для минимизации количества запросов и использования ресурсов
-6. **Локализация** - Коннектор должен поддерживать русский и английский языки
+2. **Интеграция с API BPM Centr** - Коннектор должен проверять статус подписки через API BPM Centr
+3. **Безопасность** - Коннектор должен обеспечивать безопасную обработку данных и не хранить чувствительную информацию
+4. **Производительность** - Коннектор должен быть оптимизирован для минимизации количества запросов и использования ресурсов
+5. **Локализация** - Коннектор должен поддерживать русский и английский языки
+6. **Документация** - Коннектор должен иметь подробную документацию и примеры использования
 
-### Требования к аутентификации
-
-1. **Поддержка API-ключа BPM Centr** - Коннектор должен включать поле для API-ключа BPM Centr в настройках аутентификации
-2. **Безопасное хранение учетных данных** - Все чувствительные данные должны быть помечены как `sensitive`
-3. **Тестирование аутентификации** - Коннектор должен проверять валидность учетных данных при настройке
-
-### Работа с аккаунтами Make
-
-#### Получение идентификатора аккаунта Make
-
-Для корректной работы системы подписок необходимо получить идентификатор аккаунта Make, в котором используется коннектор. Make предоставляет эту информацию через контекст выполнения операций и триггеров.
-
-```javascript
-// Получение идентификатора аккаунта Make из контекста
-function getMakeAccountId(context) {
-  // Идентификатор аккаунта доступен в контексте операций Make
-  const makeAccountId = context.makeAccountId;
-
-  // Проверка наличия идентификатора
-  if (!makeAccountId) {
-    throw new Error('Не удалось определить идентификатор аккаунта Make. Убедитесь, что коннектор используется в сценарии Make.');
-  }
-
-  return makeAccountId;
-}
-```
-
-**Важно:** Идентификатор аккаунта Make доступен только в контексте выполнения операций и триггеров. Он не доступен на этапе настройки коннектора или в тестовом режиме Make Developer Hub.
-
-#### Проверка привязки коннектора к аккаунту
-
-После получения идентификатора аккаунта Make необходимо проверить, привязан ли коннектор к этому аккаунту. Это важно для соблюдения модели "один коннектор = один аккаунт Make".
-
-```javascript
-// Функция для проверки привязки коннектора к аккаунту Make
-async function checkAccountBinding(bpmCentrApiKey, connectorName, makeAccountId, context) {
-  try {
-    // Запрос к API BPM Centr для проверки подписки
-    const subscriptionUrl = new URL('https://api.bpmcentr.ru/v1/subscription/check');
-    subscriptionUrl.searchParams.append('connector', connectorName);
-    subscriptionUrl.searchParams.append('accountId', makeAccountId);
-
-    const subscriptionResponse = await context.fetch({
-      url: subscriptionUrl.toString(),
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${bpmCentrApiKey}`
-      }
-    });
-
-    // Обработка ответа
-    if (subscriptionResponse.status !== 200) {
-      const errorData = await subscriptionResponse.json();
-      throw new Error(errorData.message || 'Ошибка проверки подписки');
-    }
-
-    const subscriptionData = await subscriptionResponse.json();
-
-    // Проверка привязки к аккаунту Make
-    if (subscriptionData.accountId && subscriptionData.accountId !== makeAccountId) {
-      throw new Error(`Этот коннектор привязан к другому аккаунту Make (${subscriptionData.accountId}). Пожалуйста, смените привязку в личном кабинете BPM Centr или приобретите отдельную подписку для текущего аккаунта.`);
-    }
-
-    // Проверка, была ли создана новая привязка
-    if (subscriptionData.isNewBinding) {
-      console.log(`Коннектор успешно привязан к аккаунту Make: ${makeAccountId}`);
-    }
-
-    return subscriptionData;
-  } catch (error) {
-    throw new Error(`Ошибка проверки привязки к аккаунту: ${error.message}`);
-  }
-}
-```
-
-При первом использовании коннектора в новом аккаунте Make, API BPM Centr автоматически привязывает коннектор к этому аккаунту, если:
-
-1. У пользователя есть активная подписка на данный коннектор
-2. Коннектор еще не привязан к другому аккаунту Make
-3. Пользователь имеет право на использование коннектора
-
-После привязки коннектор будет работать только в этом аккаунте Make. Для использования в другом аккаунте необходимо либо сменить привязку через личный кабинет BPM Centr, либо приобрести отдельную подписку.
-
-#### Обработка ошибок привязки к аккаунту
-
-При проверке привязки коннектора к аккаунту Make могут возникать различные ошибки, которые необходимо корректно обрабатывать и предоставлять пользователю понятные сообщения с рекомендациями по их устранению.
-
-```javascript
-// Функция для обработки ошибок привязки к аккаунту
-function handleAccountBindingErrors(error) {
-  let userFriendlyMessage;
-
-  // Определение типа ошибки и формирование понятного сообщения
-  if (error.message.includes('привязан к другому аккаунту')) {
-    userFriendlyMessage = 'Этот коннектор привязан к другому аккаунту Make. Вы можете:\n' +
-      '1. Сменить привязку в личном кабинете BPM Centr (раздел "Подписки")\n' +
-      '2. Приобрести отдельную подписку для текущего аккаунта';
-  } else if (error.message.includes('Не удалось определить идентификатор')) {
-    userFriendlyMessage = 'Не удалось определить идентификатор аккаунта Make. Убедитесь, что:\n' +
-      '1. Коннектор используется в сценарии Make, а не в тестовом режиме\n' +
-      '2. Вы запускаете сценарий, а не просто настраиваете коннектор';
-  } else if (error.message.includes('подписка неактивна')) {
-    userFriendlyMessage = 'Ваша подписка неактивна или истекла. Пожалуйста, обновите подписку в личном кабинете BPM Centr.';
-  } else if (error.message.includes('нет доступа к этому коннектору')) {
-    userFriendlyMessage = 'У вас нет доступа к этому коннектору. Пожалуйста, оформите подписку в личном кабинете BPM Centr.';
-  } else {
-    userFriendlyMessage = `Ошибка: ${error.message}`;
-  }
-
-  throw new Error(userFriendlyMessage);
-}
-```
-
-Пример использования в операции коннектора:
-
-```javascript
-async function getContactOperation(params, context) {
-  try {
-    // Получение параметров
-    const { contactId } = params;
-    const { apiKey, bpmCentrApiKey } = context.auth;
-
-    // Получение идентификатора аккаунта Make
-    const makeAccountId = getMakeAccountId(context);
-
-    // Проверка привязки к аккаунту
-    await checkAccountBinding(bpmCentrApiKey, 'crm-connector', makeAccountId, context);
-
-    // Выполнение основной логики операции
-    // ...
-
-    return result;
-  } catch (error) {
-    // Обработка ошибок привязки к аккаунту
-    handleAccountBindingErrors(error);
-  }
-}
-```
-
-Основные типы ошибок привязки к аккаунту:
-
-1. **Коннектор привязан к другому аккаунту** - Возникает, когда пользователь пытается использовать коннектор в аккаунте, отличном от того, к которому он привязан
-2. **Не удалось определить идентификатор аккаунта** - Возникает, когда коннектор используется в тестовом режиме или на этапе настройки
-3. **Неактивная подписка** - Возникает, когда подписка пользователя истекла или была отменена
-4. **Нет доступа к коннектору** - Возникает, когда у пользователя нет подписки на данный коннектор
-
-### Требования к операциям и триггерам
-
-1. **Проверка подписки** - Каждая операция и триггер должны проверять статус подписки и привязку к текущему аккаунту Make перед выполнением
-2. **Регистрация использования** - Каждая операция и триггер должны регистрировать использование после успешного выполнения
-3. **Обработка ошибок** - Операции и триггеры должны корректно обрабатывать ошибки и предоставлять понятные сообщения
-4. **Документация** - Каждая операция и триггер должны иметь подробное описание и документацию
-
-## Процесс разработки
-
-### 1. Планирование коннектора
-
-1. **Определение целевой системы** - Выберите систему, для которой будет разрабатываться коннектор
-2. **Анализ API** - Изучите API целевой системы и определите доступные операции
-3. **Определение модулей** - Разделите функциональность на логические модули
-4. **Определение операций и триггеров** - Определите, какие операции и триггеры будут реализованы
-
-### 2. Создание проекта в Make Developer Hub
-
-1. **Создание нового проекта** - Создайте новый проект коннектора в Make Developer Hub
-2. **Настройка метаданных** - Укажите название, описание и другие метаданные коннектора
-3. **Загрузка иконки** - Загрузите иконку коннектора в формате PNG размером 64x64 пикселя
-
-### 3. Настройка аутентификации
-
-1. **Определение типа аутентификации** - Выберите подходящий тип аутентификации для целевой системы
-2. **Добавление полей аутентификации** - Добавьте необходимые поля для аутентификации
-3. **Добавление поля для API-ключа BPM Centr** - Добавьте поле для API-ключа BPM Centr
-4. **Настройка тестирования аутентификации** - Настройте тестирование аутентификации
-
-Пример настройки аутентификации:
+### Требования к конфигурации приложения (app.json)
 
 ```json
 {
+  "name": "my-connector",
+  "label": "My Connector",
+  "version": "1.0.0",
+  "description": "Коннектор для My Service API",
+  "language": "ru",
+  "categories": ["crm", "marketing"],
+  "icon": "app.png",
+  "author": "BPM Centr",
+  "website": "https://bpmcentr.com",
+  "docs": "https://docs.bpmcentr.com/connectors/my-connector"
+}
+```
+
+### Требования к подключениям
+
+1. **Поддержка API-ключа BPM Centr** - Коннектор должен включать поле для API-ключа BPM Centr в настройках подключения
+2. **Безопасное хранение учетных данных** - Все чувствительные данные должны быть помечены как `sensitive`
+3. **Тестирование подключения** - Коннектор должен проверять валидность учетных данных при настройке
+
+Пример конфигурации подключения (connections/api_key.json):
+
+```json
+{
+  "name": "api_key",
   "type": "api_key",
-  "fields": {
-    "apiKey": {
-      "type": "text",
+  "label": "API Key",
+  "fields": [
+    {
+      "name": "apiKey",
+      "type": "password",
       "label": "API Key",
       "required": true,
       "sensitive": true,
-      "help": "API key for the target system"
+      "help": "Ваш API ключ для доступа к сервису"
     },
-    "apiUrl": {
-      "type": "text",
-      "label": "API URL",
-      "required": true,
-      "default": "https://api.example.com/v1",
-      "help": "API URL for the target system"
-    },
-    "bpmCentrApiKey": {
+    {
+      "name": "bpmCentrApiKey",
       "type": "text",
       "label": "BPM Centr API Key",
       "required": true,
       "sensitive": true,
-      "help": "API key from your BPM Centr account to verify subscription"
+      "help": "API ключ из вашего аккаунта BPM Centr для проверки подписки"
     }
-  },
+  ],
   "test": {
     "request": {
-      "url": "{{apiUrl}}/test",
+      "url": "https://api.example.com/v1/test",
       "method": "GET",
       "headers": {
-        "X-API-Key": "{{apiKey}}"
+        "Authorization": "Bearer {{connection.apiKey}}"
       }
     },
     "response": {
@@ -263,276 +142,401 @@ async function getContactOperation(params, context) {
     }
   }
 }
-```
 
-### 4. Реализация операций
+### Функция проверки подписки
 
-1. **Создание операции** - Создайте новую операцию в Make Developer Hub
-2. **Настройка входных параметров** - Определите входные параметры операции
-3. **Настройка выходных параметров** - Определите выходные параметры операции
-4. **Реализация логики операции** - Реализуйте логику операции с проверкой подписки и регистрацией использования
-
-Пример реализации операции:
+Для проверки статуса подписки в коннекторе необходимо создать IML функцию, которая будет вызываться при выполнении операций и триггеров. Обратите внимание, что для использования пользовательских IML функций может потребоваться связаться с поддержкой Make Developer Hub.
 
 ```javascript
-// Определение операции
-const getItemOperation = {
-  name: 'getItem',
-  label: 'Get Item',
-  description: 'Retrieves an item by ID',
+// functions/subscription.js
+/**
+ * Проверяет статус подписки через API BPM Centr
+ * @param {string} apiKey - API ключ BPM Centr
+ * @param {string} connectorName - Имя коннектора
+ * @returns {boolean} - Статус подписки
+ */
+function checkSubscription(apiKey, connectorName) {
+  if (!apiKey) {
+    throw new Error('API ключ BPM Centr не указан');
+  }
 
-  // Входные параметры
-  input: {
-    itemId: {
-      type: 'text',
-      label: 'Item ID',
-      required: true
+  const response = $http.get({
+    url: 'https://api.bpmcentr.com/subscription/check',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`
+    },
+    params: {
+      connector: connectorName
+    }
+  });
+
+  if (response.statusCode !== 200) {
+    throw new Error(`Ошибка проверки подписки: ${response.body.error || 'Неизвестная ошибка'}`);
+  }
+
+  if (!response.body.active) {
+    throw new Error('Ваша подписка неактивна или истекла. Пожалуйста, обновите подписку в BPM Centr.');
+  }
+
+  return true;
+}
+```
+
+### Использование функции проверки подписки в модулях
+
+Функция проверки подписки должна вызываться в каждом модуле коннектора (действия, поиск, триггеры) через секцию `wrapper` в конфигурации ответа.
+
+Пример использования в модуле действия:
+
+```json
+// modules/actions/get-item.json
+{
+  "name": "getItem",
+  "label": "Получить элемент",
+  "description": "Получает информацию об элементе по ID",
+  "connection": "api_key",
+
+  "parameters": [
+    {
+      "name": "itemId",
+      "type": "text",
+      "label": "ID элемента",
+      "required": true
+    }
+  ],
+
+  "communication": {
+    "url": "https://api.example.com/v1/items/{{parameters.itemId}}",
+    "method": "GET",
+    "headers": {
+      "Authorization": "Bearer {{connection.apiKey}}"
+    },
+    "response": {
+      "output": {
+        "id": "{{body.id}}",
+        "name": "{{body.name}}",
+        "description": "{{body.description}}",
+        "price": "{{body.price}}",
+        "created_at": "{{formatDate(body.created_at, 'YYYY-MM-DD')}}"
+      },
+      "wrapper": {
+        "data": "{{output}}",
+        "subscription": "{{checkSubscription(connection.bpmCentrApiKey, 'my-connector')}}"
+      }
     }
   },
 
-  // Выходные параметры
-  output: ['id', 'name', 'description', 'price', 'createdAt'],
-
-  // Выполнение операции
-  async run({ input, auth }) {
-    // Получение параметров
-    const { itemId } = input;
-    const { apiKey, apiUrl, bpmCentrApiKey } = auth;
-
-    try {
-      // Получение идентификатора аккаунта Make
-      const makeAccountId = this.makeAccountId; // Получаем из контекста Make
-
-      // Проверка подписки
-      const subscriptionUrl = new URL('https://api.bpmcentr.ru/v1/subscription/check');
-      subscriptionUrl.searchParams.append('connector', 'example-connector');
-      subscriptionUrl.searchParams.append('accountId', makeAccountId);
-
-      const subscriptionResponse = await this.fetch({
-        url: subscriptionUrl.toString(),
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${bpmCentrApiKey}`
-        }
-      });
-
-      if (subscriptionResponse.status !== 200) {
-        const errorData = await subscriptionResponse.json();
-        throw new Error(errorData.message || 'Subscription check failed');
-      }
-
-      const subscriptionData = await subscriptionResponse.json();
-
-      if (!subscriptionData.active) {
-        throw new Error('Your subscription is inactive or expired. Please renew your subscription at BPM Centr.');
-      }
-
-      if (!subscriptionData.hasAccess) {
-        throw new Error('You do not have access to this connector. Please subscribe to this connector at BPM Centr.');
-      }
-
-      if (subscriptionData.accountId !== makeAccountId) {
-        throw new Error('This connector is linked to a different Make account. Please purchase a subscription for this account at BPM Centr.');
-      }
-
-      // Выполнение запроса к API целевой системы
-      const itemResponse = await this.fetch({
-        url: `${apiUrl}/items/${itemId}`,
-        method: 'GET',
-        headers: {
-          'X-API-Key': apiKey
-        }
-      });
-
-      if (itemResponse.status !== 200) {
-        throw new Error(`Failed to get item: ${itemResponse.statusText}`);
-      }
-
-      const item = await itemResponse.json();
-
-      // Регистрация использования
-      const usageResponse = await this.fetch({
-        url: 'https://api.bpmcentr.ru/v1/connector/usage',
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${bpmCentrApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          connector: 'example-connector',
-          operation: 'getItem',
-          timestamp: new Date().toISOString()
-        })
-      });
-
-      if (usageResponse.status !== 201) {
-        console.warn('Failed to register usage, but operation was successful');
-      }
-
-      // Возврат результата
-      return {
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        createdAt: item.createdAt
-      };
-    } catch (error) {
-      throw new Error(`Error getting item: ${error.message}`);
+  "interface": [
+    {
+      "name": "id",
+      "type": "text",
+      "label": "ID"
+    },
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Название"
+    },
+    {
+      "name": "description",
+      "type": "textarea",
+      "label": "Описание"
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "label": "Цена"
+    },
+    {
+      "name": "created_at",
+      "type": "date",
+      "label": "Дата создания"
     }
-  }
-};
+  ]
+}
 ```
 
-### 5. Реализация триггеров
+### Обработка ошибок подписки
 
-1. **Создание триггера** - Создайте новый триггер в Make Developer Hub
-2. **Настройка входных параметров** - Определите входные параметры триггера
-3. **Настройка выходных параметров** - Определите выходные параметры триггера
-4. **Реализация логики триггера** - Реализуйте логику триггера с проверкой подписки и регистрацией использования
+При проверке подписки могут возникать различные ошибки, которые необходимо корректно обрабатывать и предоставлять пользователю понятные сообщения с рекомендациями по их устранению.
 
-Пример реализации триггера:
+Основные типы ошибок подписки:
 
-```javascript
-// Определение триггера
-const newItemTrigger = {
-  name: 'newItem',
-  label: 'New Item',
-  description: 'Triggers when a new item is created',
+1. **Неактивная подписка** - Возникает, когда подписка пользователя истекла или была отменена
+2. **Нет доступа к коннектору** - Возникает, когда у пользователя нет подписки на данный коннектор
+3. **Ошибка API BPM Centr** - Возникает при проблемах с доступом к API BPM Centr
 
-  // Входные параметры
-  input: {
-    maxResults: {
-      type: 'number',
-      label: 'Max Results',
-      required: false,
-      default: 10
+Функция `checkSubscription` автоматически обрабатывает эти ошибки и возвращает понятные сообщения пользователю.
+
+### Требования к модулям
+
+1. **Проверка подписки** - Каждый модуль должен проверять статус подписки через функцию `checkSubscription`
+2. **Обработка ошибок** - Модули должны корректно обрабатывать ошибки и предоставлять понятные сообщения
+3. **Документация** - Каждый модуль должен иметь подробное описание, примеры использования и документацию
+4. **Локализация** - Все сообщения и описания должны быть на русском языке
+
+#### Требования к модулям действий (actions)
+
+Пример модуля действия:
+
+```json
+// modules/actions/create-item.json
+{
+  "name": "createItem",
+  "label": "Создать элемент",
+  "description": "Создает новый элемент",
+  "connection": "api_key",
+
+  "parameters": [
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Название",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "textarea",
+      "label": "Описание",
+      "required": false
+    },
+    {
+      "name": "price",
+      "type": "number",
+      "label": "Цена",
+      "required": true
     }
-  },
+  ],
 
-  // Выходные параметры
-  output: ['id', 'name', 'description', 'price', 'createdAt'],
-
-  // Выполнение триггера
-  async run({ input, auth, store }) {
-    // Получение параметров
-    const { maxResults } = input;
-    const { apiKey, apiUrl, bpmCentrApiKey } = auth;
-
-    try {
-      // Получение идентификатора аккаунта Make
-      const makeAccountId = this.makeAccountId; // Получаем из контекста Make
-
-      // Проверка подписки
-      const subscriptionUrl = new URL('https://api.bpmcentr.ru/v1/subscription/check');
-      subscriptionUrl.searchParams.append('connector', 'example-connector');
-      subscriptionUrl.searchParams.append('accountId', makeAccountId);
-
-      const subscriptionResponse = await this.fetch({
-        url: subscriptionUrl.toString(),
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${bpmCentrApiKey}`
-        }
-      });
-
-      if (subscriptionResponse.status !== 200) {
-        const errorData = await subscriptionResponse.json();
-        throw new Error(errorData.message || 'Subscription check failed');
+  "communication": {
+    "url": "https://api.example.com/v1/items",
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer {{connection.apiKey}}",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "name": "{{parameters.name}}",
+      "description": "{{parameters.description}}",
+      "price": "{{parameters.price}}"
+    },
+    "response": {
+      "output": {
+        "id": "{{body.id}}",
+        "name": "{{body.name}}",
+        "description": "{{body.description}}",
+        "price": "{{body.price}}",
+        "created_at": "{{formatDate(body.created_at, 'YYYY-MM-DD')}}"
+      },
+      "wrapper": {
+        "data": "{{output}}",
+        "subscription": "{{checkSubscription(connection.bpmCentrApiKey, 'my-connector')}}"
       }
-
-      const subscriptionData = await subscriptionResponse.json();
-
-      if (!subscriptionData.active) {
-        throw new Error('Your subscription is inactive or expired. Please renew your subscription at BPM Centr.');
-      }
-
-      if (!subscriptionData.hasAccess) {
-        throw new Error('You do not have access to this connector. Please subscribe to this connector at BPM Centr.');
-      }
-
-      if (subscriptionData.accountId !== makeAccountId) {
-        throw new Error('This connector is linked to a different Make account. Please purchase a subscription for this account at BPM Centr.');
-      }
-
-      // Получение времени последнего запроса
-      const lastPollTime = store.get('lastPollTime') || new Date(0).toISOString();
-
-      // Выполнение запроса к API целевой системы
-      const itemsResponse = await this.fetch({
-        url: `${apiUrl}/items`,
-        method: 'GET',
-        headers: {
-          'X-API-Key': apiKey
-        },
-        params: {
-          createdAfter: lastPollTime,
-          limit: maxResults
-        }
-      });
-
-      if (itemsResponse.status !== 200) {
-        throw new Error(`Failed to get items: ${itemsResponse.statusText}`);
-      }
-
-      const items = await itemsResponse.json();
-
-      // Сохранение времени последнего запроса
-      if (items.length > 0) {
-        const lastItem = items[items.length - 1];
-        store.set('lastPollTime', lastItem.createdAt);
-      }
-
-      // Регистрация использования
-      const usageResponse = await this.fetch({
-        url: 'https://api.bpmcentr.ru/v1/connector/usage',
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${bpmCentrApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          connector: 'example-connector',
-          operation: 'newItem',
-          timestamp: new Date().toISOString()
-        })
-      });
-
-      if (usageResponse.status !== 201) {
-        console.warn('Failed to register usage, but operation was successful');
-      }
-
-      // Возврат результатов
-      return items.map(item => ({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        createdAt: item.createdAt
-      }));
-    } catch (error) {
-      throw new Error(`Error getting new items: ${error.message}`);
     }
   }
-};
+}
 ```
 
-### 6. Тестирование коннектора
+#### Требования к модулям поиска (searches)
+
+Пример модуля поиска:
+
+```json
+// modules/searches/list-items.json
+{
+  "name": "listItems",
+  "label": "Список элементов",
+  "description": "Получает список элементов с возможностью фильтрации",
+  "connection": "api_key",
+
+  "parameters": [
+    {
+      "name": "query",
+      "type": "text",
+      "label": "Поисковый запрос",
+      "required": false
+    },
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "communication": {
+    "url": "https://api.example.com/v1/items",
+    "method": "GET",
+    "params": {
+      "q": "{{parameters.query}}",
+      "limit": "{{parameters.maxResults}}"
+    },
+    "headers": {
+      "Authorization": "Bearer {{connection.apiKey}}"
+    },
+    "response": {
+      "iterate": "{{body.items}}",
+      "output": {
+        "id": "{{item.id}}",
+        "name": "{{item.name}}",
+        "description": "{{item.description}}",
+        "price": "{{item.price}}",
+        "created_at": "{{formatDate(item.created_at, 'YYYY-MM-DD')}}"
+      },
+      "wrapper": {
+        "data": "{{output}}",
+        "subscription": "{{checkSubscription(connection.bpmCentrApiKey, 'my-connector')}}"
+      }
+    }
+  }
+}
+```
+
+#### Требования к модулям триггеров (triggers)
+
+Пример модуля триггера:
+
+```json
+// modules/triggers/new-item.json
+{
+  "name": "newItem",
+  "label": "Новый элемент",
+  "description": "Срабатывает при создании нового элемента",
+  "connection": "api_key",
+  "type": "polling",
+
+  "parameters": [
+    {
+      "name": "maxResults",
+      "type": "uinteger",
+      "label": "Максимальное количество результатов",
+      "required": false,
+      "default": 10
+    }
+  ],
+
+  "communication": {
+    "url": "https://api.example.com/v1/items",
+    "method": "GET",
+    "params": {
+      "created_after": "{{state.lastPollTime}}",
+      "limit": "{{parameters.maxResults}}",
+      "sort": "created_at:asc"
+    },
+    "headers": {
+      "Authorization": "Bearer {{connection.apiKey}}"
+    },
+    "response": {
+      "iterate": "{{body.items}}",
+      "output": {
+        "id": "{{item.id}}",
+        "name": "{{item.name}}",
+        "description": "{{item.description}}",
+        "price": "{{item.price}}",
+        "created_at": "{{formatDate(item.created_at, 'YYYY-MM-DD')}}"
+      },
+      "state": {
+        "lastPollTime": "{{formatDate(now(), 'YYYY-MM-DDTHH:mm:ss')}}"
+      },
+      "wrapper": {
+        "data": "{{output}}",
+        "subscription": "{{checkSubscription(connection.bpmCentrApiKey, 'my-connector')}}"
+      }
+    }
+  }
+}
+```
+
+## Процесс разработки
+
+### 1. Планирование коннектора
+
+1. **Определение целевой системы** - Выберите систему, для которой будет разрабатываться коннектор
+2. **Анализ API** - Изучите API целевой системы и определите доступные операции
+3. **Определение модулей** - Разделите функциональность на логические модули (действия, поиск, триггеры)
+4. **Определение структуры файлов** - Спланируйте структуру файлов коннектора
+
+### 2. Создание проекта в Make Developer Hub
+
+1. **Создание нового проекта** - Создайте новый проект коннектора в Make Developer Hub
+2. **Настройка метаданных** - Создайте файл app.json с метаданными коннектора
+3. **Загрузка иконки** - Подготовьте иконку коннектора в формате PNG размером 64x64 пикселя
+
+### 3. Настройка подключений
+
+1. **Определение типа подключения** - Выберите подходящий тип подключения для целевой системы (API Key, OAuth 2.0, Basic Auth)
+2. **Создание файла конфигурации подключения** - Создайте файл connections/api_key.json или другой в зависимости от типа подключения
+3. **Добавление поля для API-ключа BPM Centr** - Добавьте поле для API-ключа BPM Centr
+4. **Настройка тестирования подключения** - Настройте тестирование подключения
+### 4. Создание функций
+
+1. **Создание функции проверки подписки** - Создайте файл functions/subscription.js с функцией проверки подписки
+2. **Тестирование функции** - Протестируйте функцию проверки подписки
+
+#### Ограничения IML функций
+
+При разработке IML функций необходимо учитывать следующие ограничения:
+
+1. **Максимальное время выполнения** - 10 секунд
+2. **Максимальное количество символов в числе** - 5000
+3. **Доступные объекты** - Только встроенные объекты JavaScript и Buffer
+4. **Доступные функции** - Все встроенные IML функции доступны через пространство имен `iml`, например `iml.parseDate()`
+
+Для использования пользовательских IML функций может потребоваться связаться с поддержкой Make Developer Hub.
+
+### 5. Реализация модулей действий
+
+1. **Определение действий** - Определите, какие действия будут реализованы
+2. **Создание файлов модулей** - Создайте файлы для каждого модуля действия в директории modules/actions/
+3. **Настройка параметров** - Определите входные параметры для каждого действия
+4. **Настройка коммуникации** - Настройте запросы к API целевой системы
+5. **Добавление проверки подписки** - Добавьте вызов функции проверки подписки в wrapper
+
+### 6. Реализация модулей поиска
+
+1. **Определение поисковых операций** - Определите, какие поисковые операции будут реализованы
+2. **Создание файлов модулей** - Создайте файлы для каждого модуля поиска в директории modules/searches/
+3. **Настройка параметров** - Определите входные параметры для каждой поисковой операции
+4. **Настройка коммуникации** - Настройте запросы к API целевой системы
+5. **Добавление проверки подписки** - Добавьте вызов функции проверки подписки в wrapper
+
+### 7. Реализация модулей триггеров
+
+1. **Определение триггеров** - Определите, какие триггеры будут реализованы
+2. **Создание файлов модулей** - Создайте файлы для каждого модуля триггера в директории modules/triggers/
+3. **Настройка параметров** - Определите входные параметры для каждого триггера
+4. **Настройка коммуникации** - Настройте запросы к API целевой системы
+5. **Настройка состояния** - Настройте сохранение состояния для отслеживания новых данных
+6. **Добавление проверки подписки** - Добавьте вызов функции проверки подписки в wrapper
+
+### 8. Тестирование коннектора
 
 1. **Локальное тестирование** - Протестируйте коннектор в локальной среде Make Developer Hub
-2. **Тестирование аутентификации** - Проверьте корректность работы аутентификации
-3. **Тестирование операций и триггеров** - Проверьте корректность работы операций и триггеров
-4. **Тестирование интеграции с API BPM Centr** - Проверьте корректность проверки подписки и регистрации использования
+2. **Тестирование подключения** - Проверьте корректность работы подключения
+3. **Тестирование модулей** - Проверьте корректность работы всех модулей
+4. **Тестирование проверки подписки** - Проверьте корректность проверки подписки
 5. **Тестирование обработки ошибок** - Проверьте корректность обработки различных ошибок
+6. **Тестирование IML функций** - Используйте инструменты отладки IML функций в Make Developer Hub
 
-### 7. Документирование коннектора
+#### Отладка IML функций
+
+Make Developer Hub предоставляет инструменты для отладки IML функций:
+
+1. **Отладка в веб-браузере** - Используйте инструменты разработчика в браузере для отладки IML функций
+2. **Отладка в VS Code** - Используйте расширение Make для VS Code для отладки IML функций
+3. **Логирование** - Используйте `console.log()` для вывода отладочной информации
+
+Для более подробной информации об отладке IML функций обратитесь к документации Make Developer Hub.
+
+### 9. Документирование коннектора
 
 1. **Создание документации** - Создайте подробную документацию по использованию коннектора
-2. **Описание операций и триггеров** - Опишите все операции и триггеры, их параметры и результаты
+2. **Описание модулей** - Опишите все модули, их параметры и результаты
 3. **Примеры использования** - Приведите примеры использования коннектора в различных сценариях
 4. **Рекомендации по устранению ошибок** - Опишите возможные ошибки и способы их устранения
 
-### 8. Публикация коннектора
+### 10. Публикация коннектора
 
 1. **Подготовка к публикации** - Убедитесь, что коннектор соответствует всем требованиям
 2. **Отправка на проверку** - Отправьте коннектор на проверку в BPM Centr
@@ -544,35 +548,35 @@ const newItemTrigger = {
 ### Оптимизация производительности
 
 1. **Минимизация количества запросов** - Старайтесь минимизировать количество запросов к API
-2. **Кэширование результатов** - Используйте кэширование для уменьшения количества запросов
+2. **Использование параметров запросов** - Используйте параметры запросов для фильтрации данных на стороне сервера
 3. **Пакетная обработка** - Используйте пакетную обработку для операций, которые могут быть выполнены одним запросом
-4. **Оптимизация размера данных** - Запрашивайте только необходимые данные
+4. **Оптимизация размера данных** - Запрашивайте только необходимые поля и данные
 
 ### Обработка ошибок
 
 1. **Детальные сообщения об ошибках** - Предоставляйте понятные и информативные сообщения об ошибках
 2. **Рекомендации по устранению ошибок** - Включайте рекомендации по устранению ошибок в сообщения
-3. **Логирование ошибок** - Логируйте ошибки для отладки и анализа
-4. **Обработка различных типов ошибок** - Корректно обрабатывайте различные типы ошибок (сетевые, аутентификации, доступа)
+3. **Обработка различных типов ошибок** - Корректно обрабатывайте различные типы ошибок (сетевые, аутентификации, доступа)
+4. **Проверка входных данных** - Проверяйте корректность входных данных перед отправкой запросов
 
 ### Безопасность
 
-1. **Безопасная обработка учетных данных** - Не храните учетные данные в открытом виде
+1. **Безопасная обработка учетных данных** - Помечайте чувствительные данные как `sensitive`
 2. **Использование HTTPS** - Всегда используйте HTTPS для запросов
 3. **Минимальные привилегии** - Запрашивайте только необходимые привилегии
 4. **Валидация входных данных** - Проверяйте и валидируйте все входные данные
 
 ### Локализация
 
-1. **Поддержка нескольких языков** - Обеспечьте поддержку русского и английского языков
+1. **Поддержка русского языка** - Обеспечьте поддержку русского языка для всех сообщений и описаний
 2. **Локализация сообщений об ошибках** - Локализуйте сообщения об ошибках
-3. **Локализация документации** - Предоставляйте документацию на нескольких языках
+3. **Локализация документации** - Предоставляйте документацию на русском языке
 
 ## Часто задаваемые вопросы
 
 ### Как получить доступ к Make Developer Hub?
 
-Для получения доступа к Make Developer Hub необходимо зарегистрироваться на [Make](https://www.make.com/) и запросить доступ к Developer Hub через форму на сайте.
+Для получения доступа к Make Developer Hub необходимо зарегистрироваться на [Make](https://www.make.com/) и запросить доступ к [Developer Hub](https://developers.make.com/) через форму на сайте.
 
 ### Как получить API-ключ BPM Centr?
 
@@ -584,13 +588,27 @@ API-ключ BPM Centr можно получить в личном кабине�
 
 ### Как обрабатывать ошибки API BPM Centr?
 
-При обработке ошибок API BPM Centr рекомендуется проверять статус ответа и предоставлять понятные сообщения об ошибках. Для различных статусов ответа могут быть предоставлены различные рекомендации по устранению ошибок.
+При обработке ошибок API BPM Centr рекомендуется проверять статус ответа и предоставлять понятные сообщения об ошибках. Функция `checkSubscription` автоматически обрабатывает ошибки и возвращает понятные сообщения пользователю.
 
-Особое внимание следует уделить обработке ошибок, связанных с привязкой коннектора к аккаунту Make. Если пользователь пытается использовать коннектор в аккаунте, к которому он не привязан, необходимо предоставить понятное сообщение о необходимости приобретения подписки для этого аккаунта.
+### Как отлаживать IML функции?
 
-### Как оптимизировать количество запросов к API BPM Centr?
+Make Developer Hub предоставляет несколько способов отладки IML функций:
 
-Для оптимизации количества запросов к API BPM Centr рекомендуется использовать кэширование результатов проверки подписки и пакетную регистрацию использования операций.
+1. **Отладка в веб-браузере** - Используйте инструменты разработчика в браузере для отладки IML функций
+2. **Отладка в VS Code** - Используйте расширение Make для VS Code для отладки IML функций
+3. **Логирование** - Используйте `console.log()` для вывода отладочной информации
+
+Для более подробной информации об отладке IML функций обратитесь к документации Make Developer Hub.
+
+### Какие типы модулей можно создавать в коннекторе?
+
+В коннекторе можно создавать следующие типы модулей:
+1. **Действия (actions)** - Операции, которые выполняют действия в целевой системе
+2. **Поиск (searches)** - Операции для поиска и получения данных
+3. **Триггеры (triggers)** - События, на которые может реагировать коннектор (опрос)
+4. **Мгновенные триггеры (instant_triggers)** - События, которые срабатывают мгновенно при получении webhook-запроса
+5. **Универсальные модули (universal)** - Модули для выполнения произвольных API-запросов (REST или GraphQL)
+6. **Ответчики (responders)** - Модули для отправки обработанных данных обратно в webhook
 
 ## Заключение
 

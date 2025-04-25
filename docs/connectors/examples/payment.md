@@ -6,79 +6,69 @@
 
 Платежные коннекторы обеспечивают интеграцию между платформой Make и различными платежными системами, такими как Wayforpay и другие. Эти коннекторы позволяют автоматизировать работу с платежами, выписками, возвратами и другими финансовыми операциями.
 
-## Пример коннектора для Tinkoff
+## Пример коннектора для Stripe
 
 ### Структура коннектора
 
-```javascript
-// index.js
-const auth = require('./auth');
-const paymentsModule = require('./modules/payments');
-const customersModule = require('./modules/customers');
-const receiptsModule = require('./modules/receipts');
-const { checkSubscription } = require('./utils/subscription');
-
-module.exports = {
-  name: 'tinkoff',
-  label: 'Tinkoff Payments',
-  description: 'Connector for Tinkoff Payments API',
-  icon: './assets/icon.png',
-  version: '1.0.0',
-  authentication: auth,
-  modules: [
-    paymentsModule,
-    customersModule,
-    receiptsModule
-  ]
-};
+```json
+// app.json
+{
+  "name": "stripe",
+  "label": "Stripe Payments",
+  "version": "1.0.0",
+  "description": "Коннектор для Stripe Payments API",
+  "language": "ru",
+  "categories": ["payments", "finance"],
+  "icon": "app.png",
+  "author": "BPM Centr",
+  "website": "https://bpmcentr.com",
+  "docs": "https://docs.bpmcentr.com/connectors/stripe"
+}
 ```
 
 ### Конфигурация аутентификации
 
-```javascript
-// auth.js
-module.exports = {
-  type: 'api_key',
-  fields: {
-    terminalKey: {
-      type: 'string',
-      label: 'Terminal Key',
-      required: true,
-      help: 'Your Tinkoff Terminal Key'
+```json
+// connections/api_key.json
+{
+  "name": "api_key",
+  "type": "api_key",
+  "label": "API Key",
+  "fields": [
+    {
+      "name": "apiKey",
+      "type": "password",
+      "label": "API Key",
+      "required": true,
+      "sensitive": true,
+      "help": "Ваш Stripe Secret API Key"
     },
-    password: {
-      type: 'password',
-      label: 'Password',
-      required: true,
-      sensitive: true,
-      help: 'Your Tinkoff Terminal Password'
-    },
-    bpmCentrApiKey: {
-      type: 'string',
-      label: 'BPM Centr API Key',
-      required: true,
-      sensitive: true,
-      help: 'API key from your BPM Centr account to verify subscription'
+    {
+      "name": "bpmCentrApiKey",
+      "type": "text",
+      "label": "BPM Centr API Key",
+      "required": true,
+      "sensitive": true,
+      "help": "API ключ из вашего аккаунта BPM Centr для проверки подписки"
     }
-  },
-  test: {
-    request: {
-      url: 'https://securepay.tinkoff.ru/v2/GetState',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+  ],
+  "test": {
+    "request": {
+      "url": "https://api.stripe.com/v1/customers",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer {{connection.apiKey}}",
+        "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: {
-        TerminalKey: '{{terminalKey}}',
-        PaymentId: '123456',
-        Token: '{{generateToken}}'
+      "params": {
+        "limit": "1"
       }
     },
-    response: {
-      status: 200
+    "response": {
+      "status": 200
     }
   }
-};
+}
 ```
 
 ### Модуль для работы с платежами
@@ -614,63 +604,61 @@ module.exports = {
 };
 ```
 
-### Утилита для генерации токена
+### Функция проверки подписки
 
 ```javascript
-// utils/token.js
-const crypto = require('crypto');
-
-function generateToken(requestData, password) {
-  // Создаем копию объекта без поля Token
-  const data = { ...requestData };
-  delete data.Token;
-
-  // Сортируем поля по алфавиту
-  const sortedFields = Object.keys(data).sort();
-
-  // Создаем строку для подписи
-  let concatenatedString = '';
-  for (const field of sortedFields) {
-    if (data[field] !== undefined && data[field] !== null) {
-      concatenatedString += data[field];
-    }
+// functions/subscription.js
+/**
+ * Проверяет статус подписки через API BPM Centr
+ * @param {string} apiKey - API ключ BPM Centr
+ * @param {string} connectorName - Имя коннектора
+ * @returns {boolean} - Статус подписки
+ */
+function checkSubscription(apiKey, connectorName) {
+  if (!apiKey) {
+    throw new Error('API ключ BPM Centr не указан');
   }
 
-  // Добавляем пароль
-  concatenatedString += password;
+  const response = $http.get({
+    url: 'https://api.bpmcentr.com/subscription/check',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`
+    },
+    params: {
+      connector: connectorName
+    }
+  });
 
-  // Вычисляем SHA-256 хеш
-  return crypto.createHash('sha256').update(concatenatedString).digest('hex');
+  if (response.statusCode !== 200) {
+    throw new Error(`Ошибка проверки подписки: ${response.body.error || 'Неизвестная ошибка'}`);
+  }
+
+  if (!response.body.active) {
+    throw new Error('Ваша подписка неактивна или истекла. Пожалуйста, обновите подписку в BPM Centr.');
+  }
+
+  return true;
 }
-
-module.exports = {
-  generateToken
-};
 ```
 
-## Пример коннектора для CloudPayments
+## Пример коннектора для PayPal
 
 ### Структура коннектора
 
-```javascript
-// index.js
-const auth = require('./auth');
-const paymentsModule = require('./modules/payments');
-const subscriptionsModule = require('./modules/subscriptions');
-const { checkSubscription } = require('./utils/subscription');
-
-module.exports = {
-  name: 'cloudpayments',
-  label: 'CloudPayments',
-  description: 'Connector for CloudPayments API',
-  icon: './assets/icon.png',
-  version: '1.0.0',
-  authentication: auth,
-  modules: [
-    paymentsModule,
-    subscriptionsModule
-  ]
-};
+```json
+// app.json
+{
+  "name": "paypal",
+  "label": "PayPal",
+  "version": "1.0.0",
+  "description": "Коннектор для PayPal API",
+  "language": "ru",
+  "categories": ["payments", "finance"],
+  "icon": "app.png",
+  "author": "BPM Centr",
+  "website": "https://bpmcentr.com",
+  "docs": "https://docs.bpmcentr.com/connectors/paypal"
+}
 ```
 
 ### Конфигурация аутентификации

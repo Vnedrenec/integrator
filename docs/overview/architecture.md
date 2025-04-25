@@ -90,6 +90,62 @@ sequenceDiagram
 
 ## Структура проекта
 
+### Текущая структура проекта (Frontend)
+
+```text
+integrator/
+├── css/                  # Стили CSS
+│   └── styles.css        # Основной файл стилей
+│
+├── docs/                 # Документация проекта
+│   ├── api/              # Документация по API
+│   ├── connectors/       # Документация по коннекторам
+│   ├── database/         # Схема базы данных
+│   ├── development/      # Руководства по разработке
+│   ├── infrastructure/   # Инфраструктура и деплой
+│   ├── integrations/     # Интеграции с внешними сервисами
+│   ├── marketplace/      # Документация по маркетплейсу
+│   ├── monitoring/       # Мониторинг и аналитика
+│   ├── overview/         # Обзор проекта
+│   ├── reference/        # Справочные материалы
+│   ├── requirements/     # Требования к проекту
+│   ├── security/         # Безопасность
+│   ├── subscription/     # Система подписок
+│   ├── support/          # Техническая поддержка
+│   ├── testing/          # Тестирование
+│   ├── ui/               # UI/UX документация
+│   └── index.md          # Индекс документации
+│
+├── img/                  # Изображения и графические ресурсы
+│
+├── js/                   # JavaScript файлы
+│   ├── main.js           # Основной JavaScript файл
+│   └── user-dropdown.js  # Скрипт для выпадающего меню пользователя
+│
+├── pages/                # HTML страницы
+│   ├── about.html        # О нас
+│   ├── connector-details.html # Детальная страница коннектора
+│   ├── connectors.html   # Каталог коннекторов
+│   ├── contacts.html     # Контакты
+│   ├── dashboard.html    # Личный кабинет
+│   ├── documentation.html # Документация
+│   ├── login.html        # Страница входа
+│   ├── pricing.html      # Цены
+│   ├── register.html     # Регистрация
+│   ├── user-analytics.html # Аналитика пользователя
+│   ├── user-api-keys.html # API-ключи пользователя
+│   ├── user-connectors.html # Коннекторы пользователя
+│   ├── user-profile.html # Профиль пользователя
+│   └── user-subscriptions.html # Подписки пользователя
+│
+├── .gitignore            # Файл исключений для Git
+├── index.html            # Главная страница
+├── netlify.toml          # Конфигурация для Netlify
+└── windsurf_deployment.yaml # Конфигурация для деплоя
+```
+
+### Планируемая структура бэкенда (Clean Architecture)
+
 ```text
 integrator/
 ├── src/
@@ -126,8 +182,7 @@ integrator/
 │   └── e2e/                    # End-to-end тесты
 │
 ├── config/                     # Конфигурационные файлы
-├── scripts/                    # Скрипты для развертывания и т.д.
-└── docs/                       # Документация
+└── scripts/                    # Скрипты для развертывания и т.д.
 ```
 
 ## Архитектура коннекторов

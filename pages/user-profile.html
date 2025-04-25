@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя - BPM Centr</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="dashboard-page">
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="connectors.html">Коннекторы</a></li>
+                <li><a href="pricing.html">Цены</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <div class="user-dropdown-toggle">
+                    Иван Иванов <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <section class="section">
+        <div class="container">
+            <div class="row dashboard-container" id="dashboard-container">
+                <!-- Боковое меню -->
+                <div class="col-3" id="sidebar-col">
+                    <div class="sidebar" id="sidebar">
+                        <button class="sidebar-toggle" id="sidebar-toggle" title="Свернуть/развернуть меню">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <ul class="sidebar-menu">
+                            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> <span>Дашборд</span></a></li>
+                            <li><a href="user-connectors.html"><i class="fas fa-plug"></i> <span>Мои коннекторы</span></a></li>
+                            <li><a href="user-subscriptions.html"><i class="fas fa-credit-card"></i> <span>Подписки</span></a></li>
+                            <li><a href="user-api-keys.html"><i class="fas fa-key"></i> <span>API-ключи</span></a></li>
+                            <li><a href="user-analytics.html"><i class="fas fa-chart-bar"></i> <span>Аналитика</span></a></li>
+                            <li><a href="user-profile.html" class="active"><i class="fas fa-user"></i> <span>Профиль</span></a></li>
+                            <li><a href="contacts.html"><i class="fas fa-headset"></i> <span>Поддержка</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Основной контент -->
+                <div class="col-9 dashboard-content">
+                    <div class="dashboard-welcome">
+                        <h1>Профиль пользователя</h1>
+                    </div>
+
+                    <div class="dashboard-section" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0;">
+                        <div class="card" style="margin-right: auto; min-width: 260px; max-width: 420px; width: 100%;">
+                            <h2>Личная информация</h2>
+                            <form>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="user-name" class="form-label">Имя</label>
+                                            <input type="text" id="user-name" class="form-control" value="Иван">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="user-surname" class="form-label">Фамилия</label>
+                                            <input type="text" id="user-surname" class="form-control" value="Иванов">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-email" class="form-label">Email</label>
+                                    <input type="email" id="user-email" class="form-control" value="ivan@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-phone" class="form-label">Телефон</label>
+                                    <input type="tel" id="user-phone" class="form-control" value="+380501234567">
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-company" class="form-label">Компания</label>
+                                    <input type="text" id="user-company" class="form-control" value="ООО &quot;Компания&quot;">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card" style="margin-left: auto; min-width: 260px; max-width: 420px; width: 100%;">
+                            <h2>Настройки уведомлений</h2>
+                            <div style="max-width: none; margin: 0;">
+                                <form>
+                                    <div class="form-group">
+                                        <label class="form-checkbox">
+                                            <input type="checkbox" checked>
+                                            <span>Уведомления о новых коннекторах</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-checkbox">
+                                            <input type="checkbox" checked>
+                                            <span>Уведомления об обновлениях коннекторов</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-checkbox">
+                                            <input type="checkbox" checked>
+                                            <span>Уведомления о платежах</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-checkbox">
+                                            <input type="checkbox">
+                                            <span>Маркетинговые рассылки</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <div class="card" style="min-width: 260px; max-width: 420px; width: 100%; margin: 0;">
+                            <h2>Изменение пароля</h2>
+                            <div style="max-width: none; margin: 0;">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="current-password" class="form-label">Текущий пароль</label>
+                                        <input type="password" id="current-password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-password" class="form-label">Новый пароль</label>
+                                        <input type="password" id="new-password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm-password" class="form-label">Подтверждение пароля</label>
+                                        <input type="password" id="confirm-password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="terms.html">Правовая информация</a></li>
+                <li><a href="privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                &copy; 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/user-dropdown.js"></script>
+</body>
+</html>

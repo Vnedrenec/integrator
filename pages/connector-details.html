@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creatio Коннектор - BPM Centr</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="connectors.html" class="active">Коннекторы</a></li>
+                <li><a href="pricing.html">Цены</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="dashboard.html" class="btn btn-secondary" style="margin-right: 10px;">
+                    <i class="fas fa-user-circle"></i> Личный кабинет
+                </a>
+                <a href="login.html" class="btn btn-secondary">Войти</a>
+                <a href="register.html" class="btn btn-primary">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <!-- Основная информация о коннекторе -->
+                <div class="col-8">
+                    <h1>Creatio Коннектор</h1>
+                    <div class="connector-meta" style="margin-bottom: 20px;">
+                        <div class="rating">
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="far fa-star"></i></span>
+                            <span style="margin-left: 5px;">4.0/5 (25 отзывов)</span>
+                        </div>
+                    </div>
+
+                    <!-- Табы -->
+                    <div class="tabs" style="margin-bottom: 30px;">
+                        <ul class="tab-links" style="display: flex; list-style: none; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+                            <li><a href="#" class="tab-link active" data-tab="tab-description" style="padding: 10px 20px; display: block; border-bottom: 2px solid var(--primary);">Описание</a></li>
+                            <li><a href="#" class="tab-link" data-tab="tab-features" style="padding: 10px 20px; display: block;">Возможности</a></li>
+                            <li><a href="#" class="tab-link" data-tab="tab-pricing" style="padding: 10px 20px; display: block;">Тарифы</a></li>
+                            <li><a href="#" class="tab-link" data-tab="tab-docs" style="padding: 10px 20px; display: block;">Документация</a></li>
+                            <li><a href="#" class="tab-link" data-tab="tab-reviews" style="padding: 10px 20px; display: block;">Отзывы</a></li>
+                        </ul>
+
+                        <!-- Содержимое табов -->
+                        <div class="tab-contents">
+                            <!-- Вкладка "Описание" -->
+                            <div id="tab-description" class="tab-content active">
+                                <h2>Описание</h2>
+                                <p>Creatio Коннектор предоставляет интеграцию с CRM-системой Creatio для автоматизации работы с контактами, сделками, задачами и другими объектами. Коннектор позволяет создавать, обновлять, удалять и получать данные из Creatio, а также реагировать на события в системе.</p>
+
+                                <h3>Ключевые особенности</h3>
+                                <ul>
+                                    <li>Полная интеграция с Creatio CRM</li>
+                                    <li>Работа с контактами, компаниями, сделками и задачами</li>
+                                    <li>Автоматическое обновление данных</li>
+                                    <li>Триггеры для реагирования на события в Creatio</li>
+                                    <li>Поддержка пользовательских полей и объектов</li>
+                                </ul>
+
+                                <h3>Для кого предназначен</h3>
+                                <p>Коннектор предназначен для компаний и специалистов, использующих Creatio CRM и желающих автоматизировать бизнес-процессы с помощью платформы Make. Особенно полезен для:</p>
+                                <ul>
+                                    <li>Маркетологов, которым нужно автоматизировать работу с лидами</li>
+                                    <li>Менеджеров по продажам, которым нужно автоматизировать работу со сделками</li>
+                                    <li>Руководителей проектов, которым нужно автоматизировать работу с задачами</li>
+                                    <li>Интеграторов, разрабатывающих комплексные решения на базе Creatio</li>
+                                </ul>
+
+                                <h3>Совместимость</h3>
+                                <p>Коннектор совместим со следующими версиями Creatio:</p>
+                                <ul>
+                                    <li>Creatio 7.x и выше</li>
+                                    <li>Creatio Sales</li>
+                                    <li>Creatio Marketing</li>
+                                    <li>Creatio Service</li>
+                                    <li>Creatio Studio</li>
+                                </ul>
+                            </div>
+
+                            <!-- Вкладка "Возможности" -->
+                            <div id="tab-features" class="tab-content">
+                                <h2>Возможности</h2>
+
+                                <h3>Модуль "Контакты"</h3>
+                                <p>Операции для работы с контактами в Creatio:</p>
+                                <ul>
+                                    <li><strong>Получить контакт</strong> - получение информации о контакте по ID или другим параметрам</li>
+                                    <li><strong>Создать контакт</strong> - создание нового контакта в системе</li>
+                                    <li><strong>Обновить контакт</strong> - обновление информации о существующем контакте</li>
+                                    <li><strong>Удалить контакт</strong> - удаление контакта из системы</li>
+                                    <li><strong>Поиск контактов</strong> - поиск контактов по различным параметрам</li>
+                                </ul>
+
+                                <h3>Модуль "Компании"</h3>
+                                <p>Операции для работы с компаниями в Creatio:</p>
+                                <ul>
+                                    <li><strong>Получить компанию</strong> - получение информации о компании по ID или другим параметрам</li>
+                                    <li><strong>Создать компанию</strong> - создание новой компании в системе</li>
+                                    <li><strong>Обновить компанию</strong> - обновление информации о существующей компании</li>
+                                    <li><strong>Удалить компанию</strong> - удаление компании из системы</li>
+                                    <li><strong>Поиск компаний</strong> - поиск компаний по различным параметрам</li>
+                                </ul>
+
+                                <h3>Модуль "Сделки"</h3>
+                                <p>Операции для работы со сделками в Creatio:</p>
+                                <ul>
+                                    <li><strong>Получить сделку</strong> - получение информации о сделке по ID или другим параметрам</li>
+                                    <li><strong>Создать сделку</strong> - создание новой сделки в системе</li>
+                                    <li><strong>Обновить сделку</strong> - обновление информации о существующей сделке</li>
+                                    <li><strong>Удалить сделку</strong> - удаление сделки из системы</li>
+                                    <li><strong>Поиск сделок</strong> - поиск сделок по различным параметрам</li>
+                                </ul>
+
+                                <h3>Триггеры</h3>
+                                <p>Триггеры для реагирования на события в Creatio:</p>
+                                <ul>
+                                    <li><strong>Новый контакт</strong> - срабатывает при создании нового контакта</li>
+                                    <li><strong>Обновление контакта</strong> - срабатывает при обновлении контакта</li>
+                                    <li><strong>Новая компания</strong> - срабатывает при создании новой компании</li>
+                                    <li><strong>Обновление компании</strong> - срабатывает при обновлении компании</li>
+                                    <li><strong>Новая сделка</strong> - срабатывает при создании новой сделки</li>
+                                    <li><strong>Обновление сделки</strong> - срабатывает при обновлении сделки</li>
+                                    <li><strong>Изменение стадии сделки</strong> - срабатывает при изменении стадии сделки</li>
+                                </ul>
+
+                                <h3>Примеры использования</h3>
+                                <p>Вот несколько примеров использования коннектора в сценариях Make:</p>
+                                <ol>
+                                    <li><strong>Автоматическое создание задач</strong> - при создании новой сделки в Creatio автоматически создавать задачу для менеджера</li>
+                                    <li><strong>Синхронизация контактов</strong> - синхронизация контактов между Creatio и другими системами</li>
+                                    <li><strong>Уведомления о сделках</strong> - отправка уведомлений в мессенджеры при изменении стадии сделки</li>
+                                </ol>
+                            </div>
+
+                            <!-- Вкладка "Тарифы" -->
+                            <div id="tab-pricing" class="tab-content">
+                                <h2>Варианты подписки</h2>
+                                <p>Creatio Коннектор относится к категории Премиум коннекторов:</p>
+
+                                <div class="row" style="margin-top: 30px;">
+                                    <div class="col-6" style="margin: 0 auto;">
+                                        <div class="pricing-card">
+                                            <h3 class="pricing-title">Премиум коннектор</h3>
+                                            <div class="pricing-price">40 USD / месяц</div>
+                                            <p style="text-align: center; margin-bottom: 20px;">за один коннектор в одном аккаунте Make</p>
+                                            <ul class="pricing-features">
+                                                <li>Полный доступ ко всем функциям коннектора</li>
+                                                <li>Работа со всеми модулями и операциями</li>
+                                                <li>Все доступные триггеры</li>
+                                                <li>Без ограничений по количеству операций</li>
+                                                <li>Премиум техническая поддержка 24/7</li>
+                                                <li>Приоритетные обновления</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 30px;">
+                                    <h3>Варианты оплаты</h3>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="card" style="text-align: center; padding: 20px;">
+                                                <h4>Ежемесячная подписка</h4>
+                                                <div class="pricing-price">40 USD / месяц</div>
+                                                <p>Автоматическое списание каждый месяц</p>
+                                                <a href="#" class="btn btn-primary" style="margin-top: 15px;">Оформить подписку</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="card" style="text-align: center; padding: 20px;">
+                                                <h4>Годовая подписка</h4>
+                                                <div class="pricing-price">408 USD / год</div>
+                                                <p>34 USD / месяц (скидка 15%)</p>
+                                                <a href="#" class="btn btn-primary" style="margin-top: 15px;">Оформить подписку</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 30px;">
+                                    <h3>Пробный период</h3>
+                                    <p>Доступен бесплатный 7-дневный пробный период для ознакомления с возможностями коннектора. В течение пробного периода доступны все функции коннектора без ограничений.</p>
+                                    <a href="#" class="btn btn-secondary">Начать бесплатный период</a>
+                                </div>
+                            </div>
+
+                            <!-- Вкладка "Документация" -->
+                            <div id="tab-docs" class="tab-content">
+                                <h2>Документация</h2>
+                                <p>Ниже представлена документация по использованию Creatio Коннектора:</p>
+
+                                <div class="row" style="margin-top: 30px;">
+                                    <div class="col-6">
+                                        <h3>Руководства</h3>
+                                        <ul>
+                                            <li><a href="#"><i class="fas fa-file-pdf"></i> Руководство пользователя</a></li>
+                                            <li><a href="#"><i class="fas fa-file-pdf"></i> Руководство по установке</a></li>
+                                            <li><a href="#"><i class="fas fa-file-pdf"></i> Руководство по настройке</a></li>
+                                            <li><a href="#"><i class="fas fa-file-pdf"></i> Руководство по API</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <h3>Примеры и шаблоны</h3>
+                                        <ul>
+                                            <li><a href="#"><i class="fas fa-file-code"></i> Примеры сценариев</a></li>
+                                            <li><a href="#"><i class="fas fa-file-code"></i> Шаблоны интеграций</a></li>
+                                            <li><a href="#"><i class="fas fa-file-code"></i> Примеры API-запросов</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 30px;">
+                                    <h3>Видеоуроки</h3>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <img src="../img/video-thumbnail-1.jpg" alt="Видеоурок 1" style="width: 100%; height: auto; margin-bottom: 10px;">
+                                                <h4>Начало работы с Creatio Коннектором</h4>
+                                                <p>Базовая настройка и первые шаги</p>
+                                                <a href="#" class="btn btn-secondary">Смотреть</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <img src="../img/video-thumbnail-2.jpg" alt="Видеоурок 2" style="width: 100%; height: auto; margin-bottom: 10px;">
+                                                <h4>Работа с контактами и компаниями</h4>
+                                                <p>Подробное руководство по модулям</p>
+                                                <a href="#" class="btn btn-secondary">Смотреть</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <img src="../img/video-thumbnail-3.jpg" alt="Видеоурок 3" style="width: 100%; height: auto; margin-bottom: 10px;">
+                                                <h4>Настройка триггеров</h4>
+                                                <p>Автоматизация процессов с помощью триггеров</p>
+                                                <a href="#" class="btn btn-secondary">Смотреть</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 30px;">
+                                    <h3>Часто задаваемые вопросы</h3>
+                                    <div class="faq">
+                                        <div class="faq-item">
+                                            <h4>Как подключить Creatio Коннектор к моему аккаунту Make?</h4>
+                                            <p>Для подключения коннектора необходимо приобрести подписку, получить API-ключ и добавить его в настройках коннектора в Make.</p>
+                                        </div>
+                                        <div class="faq-item">
+                                            <h4>Какие версии Creatio поддерживаются?</h4>
+                                            <p>Коннектор поддерживает Creatio версии 7.x и выше, включая Creatio Sales, Marketing, Service и Studio.</p>
+                                        </div>
+                                        <div class="faq-item">
+                                            <h4>Как получить техническую поддержку?</h4>
+                                            <p>Техническая поддержка доступна через тикет-систему в личном кабинете BPM Centr. Время ответа зависит от вашего тарифного плана.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Вкладка "Отзывы" -->
+                            <div id="tab-reviews" class="tab-content">
+                                <h2>Отзывы</h2>
+
+                                <div style="margin-bottom: 30px;">
+                                    <h3>Средний рейтинг: 4.0/5 (на основе 25 отзывов)</h3>
+                                    <div style="margin-top: 15px;">
+                                        <strong>Распределение оценок:</strong>
+                                        <div style="display: flex; margin-top: 10px;">
+                                            <div style="margin-right: 20px;">
+                                                <div>★★★★★: 12 отзывов</div>
+                                                <div>★★★★☆: 8 отзывов</div>
+                                            </div>
+                                            <div>
+                                                <div>★★★☆☆: 3 отзыва</div>
+                                                <div>★★☆☆☆: 2 отзыва</div>
+                                                <div>★☆☆☆☆: 0 отзывов</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h3>Последние отзывы</h3>
+
+                                <div class="review" style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                        <div>
+                                            <strong>Иван Петров</strong>
+                                            <div class="rating">
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                            </div>
+                                        </div>
+                                        <div>15.04.2025</div>
+                                    </div>
+                                    <p>Отличный коннектор! Легко настраивается и стабильно работает. Использую для автоматизации работы с клиентами в Creatio. Техническая поддержка отвечает быстро и по делу.</p>
+                                </div>
+
+                                <div class="review" style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                        <div>
+                                            <strong>Мария Сидорова</strong>
+                                            <div class="rating">
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="far fa-star"></i></span>
+                                            </div>
+                                        </div>
+                                        <div>10.04.2025</div>
+                                    </div>
+                                    <p>Хороший коннектор, но есть некоторые проблемы с триггерами. Иногда они срабатывают с задержкой. В целом, функциональность на высоте, документация подробная.</p>
+                                </div>
+
+                                <div class="review" style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                        <div>
+                                            <strong>Алексей Иванов</strong>
+                                            <div class="rating">
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="fas fa-star"></i></span>
+                                                <span class="star"><i class="far fa-star"></i></span>
+                                                <span class="star"><i class="far fa-star"></i></span>
+                                            </div>
+                                        </div>
+                                        <div>05.04.2025</div>
+                                    </div>
+                                    <p>Коннектор работает, но не хватает некоторых функций для работы с пользовательскими полями. Техническая поддержка обещала добавить в следующих версиях.</p>
+                                </div>
+
+                                <div style="margin-top: 30px;">
+                                    <h3>Оставить отзыв</h3>
+                                    <p>Чтобы оставить отзыв, необходимо <a href="login.html">войти</a> в систему и использовать коннектор.</p>
+
+                                    <form style="margin-top: 20px;">
+                                        <div class="form-group">
+                                            <label for="review-rating" class="form-label">Оценка</label>
+                                            <div class="rating-input">
+                                                <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                                                <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                                                <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                                                <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                                                <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="review-text" class="form-label">Отзыв</label>
+                                            <textarea id="review-text" class="form-control" rows="4" placeholder="Поделитесь своим опытом использования коннектора"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- Боковая панель -->
+                <div class="col-4">
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3>Информация</h3>
+                        <div style="margin-top: 15px;">
+                            <p><strong>Разработчик:</strong> BPM Centr</p>
+                            <p><strong>Версия:</strong> 1.0.0</p>
+                            <p><strong>Обновлено:</strong> 01.04.2025</p>
+                            <p><strong>Категория:</strong> CRM</p>
+                            <p><strong>Пользователей:</strong> 1,234</p>
+                            <p><strong>Установок:</strong> 5,678</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3>Купить коннектор</h3>
+                        <div style="margin-top: 15px;">
+                            <p class="pricing-price">40 USD / месяц</p>
+                            <p style="font-size: 14px; margin-bottom: 15px;">за один коннектор в одном аккаунте Make</p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Купить</a>
+                            <a href="#" class="btn btn-secondary" style="width: 100%;">Начать бесплатный период</a>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3>Поделиться</h3>
+                        <div style="margin-top: 15px; display: flex;">
+                            <a href="#" style="margin-right: 10px; font-size: 24px;"><i class="fab fa-facebook"></i></a>
+                            <a href="#" style="margin-right: 10px; font-size: 24px;"><i class="fab fa-twitter"></i></a>
+                            <a href="#" style="margin-right: 10px; font-size: 24px;"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" style="font-size: 24px;"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Похожие коннекторы</h3>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; margin-bottom: 10px;">
+                                <img src="../img/crm-icon.png" alt="KommoCRM Коннектор" style="width: 40px; height: 40px; margin-right: 10px;">
+                                <div>
+                                    <a href="#">KommoCRM Коннектор</a>
+                                    <div class="rating">
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; margin-bottom: 10px;">
+                                <img src="../img/crm-icon.png" alt="KeyCRM Коннектор" style="width: 40px; height: 40px; margin-right: 10px;">
+                                <div>
+                                    <a href="#">KeyCRM Коннектор</a>
+                                    <div class="rating">
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="far fa-star"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <img src="../img/crm-icon.png" alt="SugarCRM Коннектор" style="width: 40px; height: 40px; margin-right: 10px;">
+                                <div>
+                                    <a href="#">SugarCRM Коннектор</a>
+                                    <div class="rating">
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="fas fa-star"></i></span>
+                                        <span class="star"><i class="far fa-star"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="terms.html">Правовая информация</a></li>
+                <li><a href="privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

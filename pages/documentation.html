@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документация - BPM Centr</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="connectors.html">Коннекторы</a></li>
+                <li><a href="pricing.html">Цены</a></li>
+                <li><a href="documentation.html" class="active">Документация</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="dashboard.html" class="btn btn-secondary" style="margin-right: 10px;">
+                    <i class="fas fa-user-circle"></i> Личный кабинет
+                </a>
+                <a href="login.html" class="btn btn-secondary">Войти</a>
+                <a href="register.html" class="btn btn-primary">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <section class="section">
+        <div class="container">
+            <h1>Документация</h1>
+
+            <!-- Навигация по документации -->
+            <div class="row" style="margin-top: 30px;">
+                <div class="col-3">
+                    <div class="sidebar">
+                        <h3>Разделы документации</h3>
+                        <ul class="sidebar-menu">
+                            <li><a href="#getting-started" class="active">Начало работы</a></li>
+                            <li><a href="#connectors">Коннекторы</a></li>
+                            <li><a href="#api">API</a></li>
+                            <li><a href="#integration">Интеграция с Make</a></li>
+                            <li><a href="#faq">Часто задаваемые вопросы</a></li>
+                            <li><a href="#support">Техническая поддержка</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-9">
+                    <!-- Начало работы -->
+                    <div id="getting-started">
+                        <h2>Начало работы</h2>
+                        <p>Добро пожаловать в документацию BPM Centr! Здесь вы найдете всю необходимую информацию для начала работы с нашими коннекторами для платформы Make.</p>
+
+                        <h3>Шаг 1: Регистрация</h3>
+                        <p>Для начала работы с BPM Centr необходимо <a href="register.html">зарегистрироваться</a> на платформе. Процесс регистрации занимает всего несколько минут.</p>
+
+                        <h3>Шаг 2: Выбор коннектора</h3>
+                        <p>После регистрации вы можете выбрать нужный коннектор из <a href="connectors.html">каталога коннекторов</a>. Каждый коннектор имеет подробное описание функциональности и примеры использования.</p>
+
+                        <h3>Шаг 3: Оформление подписки</h3>
+                        <p>Выбрав нужный коннектор, вы можете оформить подписку на него. Каждый коннектор имеет бесплатный 7-дневный пробный период.</p>
+
+                        <h3>Шаг 4: Использование коннектора</h3>
+                        <p>После оформления подписки вы получите API-ключ, который необходимо использовать для подключения коннектора к вашему аккаунту Make.</p>
+                    </div>
+
+                    <!-- Коннекторы -->
+                    <div id="connectors" style="margin-top: 50px;">
+                        <h2>Коннекторы</h2>
+                        <p>BPM Centr предлагает широкий выбор коннекторов для интеграции с различными системами и сервисами.</p>
+
+                        <h3>Категории коннекторов</h3>
+                        <ul>
+                            <li><strong>Стандартные коннекторы (15 USD / месяц)</strong> - маркетплейсы, почтовые сервисы, SMS-сервисы</li>
+                            <li><strong>Расширенные коннекторы (25 USD / месяц)</strong> - платежные системы, сервисы аналитики</li>
+                            <li><strong>Премиум коннекторы (40 USD / месяц)</strong> - CRM-системы, ERP-системы, корпоративные решения</li>
+                        </ul>
+
+                        <h3>Модель подписки</h3>
+                        <p>Каждый коннектор оплачивается отдельно и может использоваться в одном аккаунте Make. Это означает, что вы можете использовать коннектор в любом количестве сценариев внутри одного аккаунта Make.</p>
+
+                        <h3>Пробный период</h3>
+                        <p>Каждый коннектор имеет бесплатный 7-дневный пробный период, в течение которого вы можете ознакомиться с его функциональностью без ограничений.</p>
+                    </div>
+
+                    <!-- API -->
+                    <div id="api" style="margin-top: 50px;">
+                        <h2>API</h2>
+                        <p>BPM Centr предоставляет API для управления подписками и коннекторами программным способом.</p>
+
+                        <h3>Аутентификация</h3>
+                        <p>Для аутентификации в API используется API-ключ, который можно получить в личном кабинете.</p>
+
+                        <h3>Примеры запросов</h3>
+                        <pre><code>
+// Получение списка активных коннекторов
+GET /api/v1/connectors
+Authorization: Bearer YOUR_API_KEY
+
+// Получение информации о подписке
+GET /api/v1/subscriptions/{subscription_id}
+Authorization: Bearer YOUR_API_KEY
+                        </code></pre>
+
+                        <h3>Документация API</h3>
+                        <p>Полная документация API доступна <a href="#">здесь</a>.</p>
+                    </div>
+
+                    <!-- Интеграция с Make -->
+                    <div id="integration" style="margin-top: 50px;">
+                        <h2>Интеграция с Make</h2>
+                        <p>Коннекторы BPM Centr легко интегрируются с платформой Make.</p>
+
+                        <h3>Подключение коннектора</h3>
+                        <ol>
+                            <li>Войдите в свой аккаунт Make</li>
+                            <li>Создайте новый сценарий или откройте существующий</li>
+                            <li>Добавьте модуль и выберите коннектор BPM Centr</li>
+                            <li>Введите API-ключ, полученный в личном кабинете BPM Centr</li>
+                            <li>Настройте параметры коннектора в соответствии с вашими потребностями</li>
+                        </ol>
+
+                        <h3>Примеры сценариев</h3>
+                        <p>Примеры сценариев для различных коннекторов доступны в разделе документации каждого коннектора.</p>
+                    </div>
+
+                    <!-- Часто задаваемые вопросы -->
+                    <div id="faq" style="margin-top: 50px;">
+                        <h2>Часто задаваемые вопросы</h2>
+
+                        <div class="faq-item">
+                            <h3>Как работает модель "один коннектор = один аккаунт Make"?</h3>
+                            <p>Каждая подписка на коннектор дает право использовать его в одном аккаунте Make. Коннектор привязывается к аккаунту Make при первом использовании и может использоваться в любом количестве сценариев внутри этого аккаунта.</p>
+                        </div>
+
+                        <div class="faq-item">
+                            <h3>Могу ли я использовать один коннектор в нескольких аккаунтах Make?</h3>
+                            <p>Нет, каждая подписка на коннектор привязывается к одному аккаунту Make. Если вам нужно использовать коннектор в нескольких аккаунтах, необходимо оформить отдельную подписку для каждого аккаунта.</p>
+                        </div>
+
+                        <div class="faq-item">
+                            <h3>Как происходит оплата?</h3>
+                            <p>Оплата производится ежемесячно или ежегодно (со скидкой 15%) с помощью банковской карты или банковского перевода. Вы можете управлять своими платежными данными в личном кабинете.</p>
+                        </div>
+
+                        <div class="faq-item">
+                            <h3>Есть ли ограничения по количеству операций?</h3>
+                            <p>Нет, подписка не ограничивает количество операций, которые можно выполнить с помощью коннектора. Вы можете использовать коннектор без ограничений в рамках одного аккаунта Make.</p>
+                        </div>
+                    </div>
+
+                    <!-- Техническая поддержка -->
+                    <div id="support" style="margin-top: 50px;">
+                        <h2>Техническая поддержка</h2>
+                        <p>Если у вас возникли вопросы или проблемы при использовании коннекторов BPM Centr, вы можете обратиться в нашу техническую поддержку.</p>
+
+                        <h3>Способы связи</h3>
+                        <ul>
+                            <li><strong>Email:</strong> <a href="mailto:support@bpmcentr.com">support@bpmcentr.com</a></li>
+                            <li><strong>Тикет-система:</strong> доступна в <a href="dashboard.html">личном кабинете</a></li>
+                            <li><strong>Чат:</strong> доступен на сайте в рабочее время (9:00 - 18:00 по Киевскому времени)</li>
+                        </ul>
+
+                        <h3>Время ответа</h3>
+                        <p>Время ответа зависит от категории коннектора:</p>
+                        <ul>
+                            <li><strong>Стандартные коннекторы:</strong> до 24 часов</li>
+                            <li><strong>Расширенные коннекторы:</strong> до 12 часов</li>
+                            <li><strong>Премиум коннекторы:</strong> до 4 часов, поддержка 24/7</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="terms.html">Правовая информация</a></li>
+                <li><a href="privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

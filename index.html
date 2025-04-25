@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM Centr - Платформа для интеграции с Make</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="pages/connectors.html">Коннекторы</a></li>
+                <li><a href="pages/pricing.html">Цены</a></li>
+                <li><a href="pages/documentation.html">Документация</a></li>
+                <li><a href="pages/about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="pages/dashboard.html" class="btn btn-secondary" style="margin-right: 10px;">
+                    <i class="fas fa-user-circle"></i> Личный кабинет
+                </a>
+                <a href="pages/login.html" class="btn btn-secondary">Войти</a>
+                <a href="pages/register.html" class="btn btn-primary">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Герой-секция -->
+    <section class="hero">
+        <div class="container">
+            <h1>Расширьте возможности Make с нашими коннекторами</h1>
+            <p>BPM Centr предлагает уникальные коннекторы для интеграции с системами, недоступными в стандартном каталоге Make</p>
+            <a href="pages/connectors.html" class="btn btn-secondary">Смотреть коннекторы</a>
+        </div>
+    </section>
+
+    <!-- Особенности -->
+    <section class="section features">
+        <div class="container">
+            <h2 class="text-center">Почему BPM Centr?</h2>
+            <div class="row">
+                <div class="col-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h3>Уникальные коннекторы</h3>
+                        <p>Доступ к системам, которых нет в каталоге Make</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Безопасность данных</h3>
+                        <p>Данные передаются напрямую между Make и системами</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Техническая поддержка</h3>
+                        <p>Помощь в настройке и использовании коннекторов</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные коннекторы -->
+    <section class="section">
+        <div class="container">
+            <h2 class="text-center">Популярные коннекторы</h2>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card connector-card">
+                        <img src="img/crm-icon.png" alt="CRM Коннектор" class="connector-logo">
+                        <h3 class="connector-title">CRM Коннектор</h3>
+                        <p class="connector-description">Интеграция с популярными CRM системами</p>
+                        <div class="connector-meta">
+                            <span class="connector-category">Категория: CRM</span>
+                            <div class="rating">
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="far fa-star"></i></span>
+                            </div>
+                        </div>
+                        <p class="connector-price">Цена: 40 USD / месяц</p>
+                        <a href="pages/connector-details.html" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card connector-card">
+                        <img src="img/marketplace-icon.png" alt="Маркетплейс Коннектор" class="connector-logo">
+                        <h3 class="connector-title">Маркетплейс Коннектор</h3>
+                        <p class="connector-description">Интеграция с популярными маркетплейсами</p>
+                        <div class="connector-meta">
+                            <span class="connector-category">Категория: Маркетплейсы</span>
+                            <div class="rating">
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                            </div>
+                        </div>
+                        <p class="connector-price">Цена: 15 USD / месяц</p>
+                        <a href="pages/connector-details.html" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card connector-card">
+                        <img src="img/payment-icon.png" alt="Платежный Коннектор" class="connector-logo">
+                        <h3 class="connector-title">Платежный Коннектор</h3>
+                        <p class="connector-description">Интеграция с платежными системами</p>
+                        <div class="connector-meta">
+                            <span class="connector-category">Категория: Платежи</span>
+                            <div class="rating">
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="fas fa-star"></i></span>
+                                <span class="star"><i class="far fa-star"></i></span>
+                            </div>
+                        </div>
+                        <p class="connector-price">Цена: 25 USD / месяц</p>
+                        <a href="pages/connector-details.html" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center" style="margin-top: 30px;">
+                <a href="pages/connectors.html" class="btn btn-secondary">Все коннекторы</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Как это работает -->
+    <section class="section" style="background-color: var(--surface);">
+        <div class="container">
+            <h2 class="text-center">Как это работает</h2>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="text-center" style="font-size: 36px; color: var(--primary); margin-bottom: 15px;">1</div>
+                        <h3 class="text-center">Регистрация</h3>
+                        <p>Создайте аккаунт на платформе BPM Centr</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="text-center" style="font-size: 36px; color: var(--primary); margin-bottom: 15px;">2</div>
+                        <h3 class="text-center">Выбор коннектора</h3>
+                        <p>Выберите нужный коннектор и оформите подписку</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="text-center" style="font-size: 36px; color: var(--primary); margin-bottom: 15px;">3</div>
+                        <h3 class="text-center">Использование</h3>
+                        <p>Используйте коннектор в своих сценариях Make</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="section">
+        <div class="container">
+            <h2 class="text-center">Отзывы клиентов</h2>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="rating" style="margin-bottom: 15px;">
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                        </div>
+                        <p>"Благодаря коннекторам BPM Centr мы смогли автоматизировать работу с нашей CRM-системой, которой не было в стандартном каталоге Make."</p>
+                        <p style="font-weight: 500;">Иван Петров, ООО "Технологии"</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="rating" style="margin-bottom: 15px;">
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="far fa-star"></i></span>
+                        </div>
+                        <p>"Отличная техническая поддержка и простота настройки. Коннекторы работают стабильно и без сбоев."</p>
+                        <p style="font-weight: 500;">Мария Сидорова, ИП</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="rating" style="margin-bottom: 15px;">
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                            <span class="star"><i class="fas fa-star"></i></span>
+                        </div>
+                        <p>"Экономия времени и ресурсов благодаря автоматизации. Рекомендую всем, кто использует Make для интеграции систем."</p>
+                        <p style="font-weight: 500;">Алексей Иванов, ООО "Инновации"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="pages/contacts.html">Контакты</a></li>
+                <li><a href="pages/terms.html">Правовая информация</a></li>
+                <li><a href="pages/privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - BPM Centr</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="dashboard-page">
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="connectors.html">Коннекторы</a></li>
+                <li><a href="pricing.html">Цены</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <div class="user-dropdown-toggle">
+                    Иван Иванов <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown-menu">
+                    <ul>
+                        <li><a href="dashboard.html">Личный кабинет</a></li>
+                        <li><a href="user-profile.html">Профиль</a></li>
+                        <li><a href="user-api-keys.html">API-ключи</a></li>
+                        <li><a href="user-subscriptions.html">Подписки</a></li>
+                        <li><a href="../index.html">Выйти</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <section class="section">
+        <div class="container">
+            <div class="row dashboard-container" id="dashboard-container">
+                <!-- Боковое меню -->
+                <div class="col-3" id="sidebar-col">
+                    <div class="sidebar" id="sidebar">
+                        <button class="sidebar-toggle" id="sidebar-toggle" title="Свернуть/развернуть меню">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <ul class="sidebar-menu">
+                            <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> <span>Дашборд</span></a></li>
+                            <li><a href="user-connectors.html"><i class="fas fa-plug"></i> <span>Мои коннекторы</span></a></li>
+                            <li><a href="user-subscriptions.html"><i class="fas fa-credit-card"></i> <span>Подписки</span></a></li>
+                            <li><a href="user-api-keys.html"><i class="fas fa-key"></i> <span>API-ключи</span></a></li>
+                            <li><a href="user-analytics.html"><i class="fas fa-chart-bar"></i> <span>Аналитика</span></a></li>
+                            <li><a href="user-profile.html"><i class="fas fa-user"></i> <span>Профиль</span></a></li>
+                            <li><a href="contacts.html"><i class="fas fa-headset"></i> <span>Поддержка</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Основной контент -->
+                <div class="col-9 dashboard-content">
+                    <div class="dashboard-welcome">
+                        <h1>Добро пожаловать, Иван!</h1>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h2>Сводка</h2>
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <div class="stat-card-title">Активные коннекторы</div>
+                                <div class="stat-card-value">2</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-title">API-ключи</div>
+                                <div class="stat-card-value">2 активных ключа</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-title">Расходы</div>
+                                <div class="stat-card-value">55 USD / месяц</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-title">Следующее списание</div>
+                                <div class="stat-card-value">15.05.2025</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h2>Последние уведомления</h2>
+                        <div class="card" style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div><strong>Пробный период</strong></div>
+                                <div>10.04.2025</div>
+                            </div>
+                            <p>Пробный период для Email коннектора заканчивается через 5 дней. <a href="#">Оформить подписку</a></p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h2>Рекомендуемые коннекторы</h2>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card connector-card">
+                                    <img src="../img/marketplace-icon.png" alt="Маркетплейс Коннектор" class="connector-logo">
+                                    <h3 class="connector-title">Маркетплейс Коннектор</h3>
+                                    <p class="connector-description">Интеграция с популярными маркетплейсами</p>
+                                    <div class="connector-meta">
+                                        <span class="connector-category">Категория: Маркетплейсы</span>
+                                        <div class="rating">
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                        </div>
+                                    </div>
+                                    <p class="connector-price">Цена: 15 USD / месяц</p>
+                                    <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card connector-card">
+                                    <img src="../img/payment-icon.png" alt="Платежный Коннектор" class="connector-logo">
+                                    <h3 class="connector-title">Платежный Коннектор</h3>
+                                    <p class="connector-description">Интеграция с платежными системами</p>
+                                    <div class="connector-meta">
+                                        <span class="connector-category">Категория: Платежи</span>
+                                        <div class="rating">
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="far fa-star"></i></span>
+                                        </div>
+                                    </div>
+                                    <p class="connector-price">Цена: 25 USD / месяц</p>
+                                    <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card connector-card">
+                                    <img src="../img/sms-icon.png" alt="SMS Коннектор" class="connector-logo">
+                                    <h3 class="connector-title">SMS Коннектор</h3>
+                                    <p class="connector-description">Интеграция с SMS сервисами</p>
+                                    <div class="connector-meta">
+                                        <span class="connector-category">Категория: SMS</span>
+                                        <div class="rating">
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="fas fa-star"></i></span>
+                                            <span class="star"><i class="far fa-star"></i></span>
+                                            <span class="star"><i class="far fa-star"></i></span>
+                                        </div>
+                                    </div>
+                                    <p class="connector-price">Цена: 15 USD / месяц</p>
+                                    <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="terms.html">Правовая информация</a></li>
+                <li><a href="privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/user-dropdown.js"></script>
+</body>
+</html>

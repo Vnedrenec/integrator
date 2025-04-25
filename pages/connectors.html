@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коннекторы для Make - BPM Centr</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="connectors.html" class="active">Коннекторы</a></li>
+                <li><a href="pricing.html">Цены</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-secondary">Войти</a>
+                <a href="register.html" class="btn btn-primary">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <section class="section">
+        <div class="container">
+            <h1>Коннекторы для Make</h1>
+
+            <!-- Поиск и фильтры -->
+            <div class="filters">
+                <div class="search-box">
+                    <div class="search-input-container">
+                        <input type="text" class="search-input" placeholder="Поиск по коннекторам..." id="connector-search">
+                        <button type="button" class="search-button" id="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="category-filter" class="filter-label">Категория</label>
+                    <select id="category-filter" class="filter-select">
+                        <option value="">Все категории</option>
+                        <option value="crm">CRM</option>
+                        <option value="marketplace">Маркетплейсы</option>
+                        <option value="payment">Платежные системы</option>
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                        <option value="erp">ERP</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="price-filter" class="filter-label">Цена</label>
+                    <select id="price-filter" class="filter-select">
+                        <option value="">Все цены</option>
+                        <option value="15">Стандартные (15 USD)</option>
+                        <option value="25">Расширенные (25 USD)</option>
+                        <option value="40">Премиум (40 USD)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="rating-filter" class="filter-label">Рейтинг</label>
+                    <select id="rating-filter" class="filter-select">
+                        <option value="">Все рейтинги</option>
+                        <option value="5">★★★★★</option>
+                        <option value="4">★★★★☆ и выше</option>
+                        <option value="3">★★★☆☆ и выше</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sort-filter" class="filter-label">Сортировка</label>
+                    <select id="sort-filter" class="filter-select">
+                        <option value="popular">По популярности</option>
+                        <option value="rating">По рейтингу</option>
+                        <option value="price-asc">По цене (возр.)</option>
+                        <option value="price-desc">По цене (убыв.)</option>
+                        <option value="new">Сначала новые</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Категории -->
+            <div class="categories" style="margin-bottom: 30px;">
+                <h2>Категории</h2>
+                <div class="row">
+                    <div class="col">
+                        <a href="#" class="btn btn-secondary" style="margin-right: 10px; margin-bottom: 10px;">CRM</a>
+                        <a href="#" class="btn btn-secondary" style="margin-right: 10px; margin-bottom: 10px;">Маркетплейсы</a>
+                        <a href="#" class="btn btn-secondary" style="margin-right: 10px; margin-bottom: 10px;">Платежные системы</a>
+                        <a href="#" class="btn btn-secondary" style="margin-right: 10px; margin-bottom: 10px;">Email</a>
+                        <a href="#" class="btn btn-secondary" style="margin-right: 10px; margin-bottom: 10px;">SMS</a>
+                        <a href="#" class="btn btn-secondary" style="margin-right: 10px; margin-bottom: 10px;">ERP</a>
+                        <a href="#" class="btn btn-primary" style="margin-bottom: 10px;">Все</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Рекомендуемые коннекторы -->
+            <div class="recommended-connectors" style="margin-bottom: 50px;">
+                <h2>Рекомендуемые коннекторы</h2>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card connector-card">
+                            <img src="../img/crm-icon.png" alt="Creatio Коннектор" class="connector-logo">
+                            <h3 class="connector-title">Creatio Коннектор</h3>
+                            <p class="connector-description">Интеграция с Creatio CRM для автоматизации работы с контактами, сделками и задачами.</p>
+                            <div class="connector-meta">
+                                <span class="connector-category">Категория: CRM</span>
+                                <div class="rating">
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="far fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="connector-price">Цена: 40 USD / месяц</p>
+                            <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card connector-card">
+                            <img src="../img/marketplace-icon.png" alt="Маркетплейс Коннектор" class="connector-logo">
+                            <h3 class="connector-title">Маркетплейс Коннектор</h3>
+                            <p class="connector-description">Интеграция с популярными маркетплейсами для автоматизации работы с товарами, заказами и клиентами.</p>
+                            <div class="connector-meta">
+                                <span class="connector-category">Категория: Маркетплейсы</span>
+                                <div class="rating">
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="connector-price">Цена: 15 USD / месяц</p>
+                            <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card connector-card">
+                            <img src="../img/payment-icon.png" alt="Платежный Коннектор" class="connector-logo">
+                            <h3 class="connector-title">Платежный Коннектор</h3>
+                            <p class="connector-description">Интеграция с платежными системами для автоматизации работы с платежами, возвратами и подписками.</p>
+                            <div class="connector-meta">
+                                <span class="connector-category">Категория: Платежи</span>
+                                <div class="rating">
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="far fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="connector-price">Цена: 25 USD / месяц</p>
+                            <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Новые коннекторы -->
+            <div class="new-connectors">
+                <h2>Новые коннекторы</h2>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card connector-card">
+                            <img src="../img/erp-icon.png" alt="ERP Коннектор" class="connector-logo">
+                            <h3 class="connector-title">ERP Коннектор</h3>
+                            <p class="connector-description">Интеграция с ERP системами для автоматизации работы с товарами, складами и заказами.</p>
+                            <div class="connector-meta">
+                                <span class="connector-category">Категория: ERP</span>
+                                <div class="rating">
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="far fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="connector-price">Цена: 40 USD / месяц</p>
+                            <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card connector-card">
+                            <img src="../img/email-icon.png" alt="Email Коннектор" class="connector-logo">
+                            <h3 class="connector-title">Email Коннектор</h3>
+                            <p class="connector-description">Интеграция с email сервисами для автоматизации работы с письмами, рассылками и подписчиками.</p>
+                            <div class="connector-meta">
+                                <span class="connector-category">Категория: Email</span>
+                                <div class="rating">
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="far fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="connector-price">Цена: 15 USD / месяц</p>
+                            <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card connector-card">
+                            <img src="../img/sms-icon.png" alt="SMS Коннектор" class="connector-logo">
+                            <h3 class="connector-title">SMS Коннектор</h3>
+                            <p class="connector-description">Интеграция с SMS сервисами для автоматизации работы с сообщениями, рассылками и подписчиками.</p>
+                            <div class="connector-meta">
+                                <span class="connector-category">Категория: SMS</span>
+                                <div class="rating">
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="fas fa-star"></i></span>
+                                    <span class="star"><i class="far fa-star"></i></span>
+                                    <span class="star"><i class="far fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="connector-price">Цена: 15 USD / месяц</p>
+                            <a href="connector-details.html" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Запрос нового коннектора -->
+            <div style="margin-top: 50px; background-color: var(--surface); border-radius: 8px; padding: 30px;">
+                <div class="row">
+                    <div class="col-8">
+                        <h2>Не нашли нужный коннектор?</h2>
+                        <p>BPM Centr разрабатывает коннекторы под заказ для любых сервисов и API. Наша команда опытных разработчиков создаст индивидуальное решение, которое идеально подойдет для ваших бизнес-процессов.</p>
+
+                        <h3 style="margin-top: 20px; font-size: 18px;">Преимущества заказной разработки:</h3>
+                        <ul style="margin-top: 10px; margin-bottom: 20px;">
+                            <li>Индивидуальный подход к вашим потребностям</li>
+                            <li>Полная интеграция с вашими системами</li>
+                            <li>Приоритетная техническая поддержка</li>
+                            <li>Возможность доработки и обновления функционала</li>
+                            <li>Эксклюзивный доступ к коннектору (по запросу)</li>
+                        </ul>
+
+                        <p>Заполните форму запроса, и наши специалисты свяжутся с вами для обсуждения деталей и сроков разработки.</p>
+                    </div>
+                    <div class="col-4" style="display: flex; align-items: center; justify-content: center;">
+                        <a href="#" class="btn btn-primary" style="padding: 15px 30px; font-size: 18px;" data-modal="request-connector-modal">Запросить новый коннектор</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Пагинация -->
+            <ul class="pagination">
+                <li><a href="#">Предыдущая</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">...</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">Следующая</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Модальное окно запроса нового коннектора -->
+    <div id="request-connector-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Запрос на новый коннектор</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; margin-bottom: 15px;">Заполните форму для запроса разработки нового коннектора. Наша команда проанализирует возможность создания коннектора, оценит сроки и стоимость разработки, после чего свяжется с вами для обсуждения деталей.</p>
+                <p style="font-size: 14px; margin-bottom: 15px;"><strong>Процесс разработки:</strong> анализ API → проектирование → разработка → тестирование → внедрение → поддержка</p>
+                <form>
+                    <div class="row">
+                        <div class="col-6">
+                            <h3 style="font-size: 16px; margin-bottom: 10px;">Информация о коннекторе</h3>
+                            <div class="form-group">
+                                <label for="service-name" class="form-label">Название сервиса*</label>
+                                <input type="text" id="service-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="service-category" class="form-label">Категория*</label>
+                                <select id="service-category" class="form-control" required>
+                                    <option value="">Выберите категорию</option>
+                                    <option value="crm">CRM</option>
+                                    <option value="marketplace">Маркетплейсы</option>
+                                    <option value="payment">Платежные системы</option>
+                                    <option value="email">Email</option>
+                                    <option value="sms">SMS</option>
+                                    <option value="erp">ERP</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="service-description" class="form-label">Описание сервиса*</label>
+                                <textarea id="service-description" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="service-api-url" class="form-label">Ссылка на API документацию</label>
+                                <input type="url" id="service-api-url" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h3 style="font-size: 16px; margin-bottom: 10px;">Контактная информация</h3>
+                            <div class="form-group">
+                                <label for="contact-name" class="form-label">Ваше имя*</label>
+                                <input type="text" id="contact-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email" class="form-label">Email*</label>
+                                <input type="email" id="contact-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone" class="form-label">Телефон</label>
+                                <input type="tel" id="contact-phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-company" class="form-label">Компания</label>
+                                <input type="text" id="contact-company" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-checkbox">
+                                    <input type="checkbox" required>
+                                    <span>Я согласен на обработку персональных данных*</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary">Отправить запрос</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="terms.html">Правовая информация</a></li>
+                <li><a href="privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/user-dropdown.js"></script>
+</body>
+</html>

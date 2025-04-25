@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - BPM Centr</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">BPM Centr</div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="connectors.html">Коннекторы</a></li>
+                <li><a href="pricing.html">Цены</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="dashboard.html" class="btn btn-secondary" style="margin-right: 10px;">
+                    <i class="fas fa-user-circle"></i> Личный кабинет
+                </a>
+                <a href="login.html" class="btn btn-secondary">Войти</a>
+                <a href="register.html" class="btn btn-primary">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <section class="section">
+        <div class="container">
+            <h1>Контакты</h1>
+            
+            <div class="row" style="margin-top: 30px;">
+                <div class="col-6">
+                    <h2>Свяжитесь с нами</h2>
+                    <p>Если у вас есть вопросы или предложения, свяжитесь с нами любым удобным способом.</p>
+                    
+                    <div style="margin-top: 30px;">
+                        <h3>Контактная информация</h3>
+                        <p><strong>Email:</strong> <a href="mailto:info@bpmcentr.com">info@bpmcentr.com</a></p>
+                        <p><strong>Телефон:</strong> <a href="tel:+380441234567">+38 (044) 123-45-67</a></p>
+                        <p><strong>Адрес:</strong> Украина, г. Киев, ул. Хрещатик, 1</p>
+                        
+                        <div style="margin-top: 20px;">
+                            <h3>Мы в социальных сетях</h3>
+                            <div style="margin-top: 10px;">
+                                <a href="#" style="margin-right: 15px; font-size: 24px;"><i class="fab fa-facebook"></i></a>
+                                <a href="#" style="margin-right: 15px; font-size: 24px;"><i class="fab fa-twitter"></i></a>
+                                <a href="#" style="font-size: 24px;"><i class="fab fa-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-6">
+                    <div class="card">
+                        <h2>Запрос на корпоративное предложение</h2>
+                        <p>Заполните форму ниже, чтобы получить индивидуальное корпоративное предложение для вашей компании.</p>
+                        
+                        <form style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label for="company-name" class="form-label">Название компании*</label>
+                                <input type="text" id="company-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-name" class="form-label">Контактное лицо*</label>
+                                <input type="text" id="contact-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email" class="form-label">Email*</label>
+                                <input type="email" id="contact-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone" class="form-label">Телефон</label>
+                                <input type="tel" id="contact-phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="make-accounts" class="form-label">Количество аккаунтов Make*</label>
+                                <select id="make-accounts" class="form-control" required>
+                                    <option value="">Выберите количество</option>
+                                    <option value="2-5">2-5</option>
+                                    <option value="6-10">6-10</option>
+                                    <option value="11-20">11-20</option>
+                                    <option value="21+">21+</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="connectors-needed" class="form-label">Необходимые коннекторы</label>
+                                <textarea id="connectors-needed" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="additional-info" class="form-label">Дополнительная информация</label>
+                                <textarea id="additional-info" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-checkbox">
+                                    <input type="checkbox" required>
+                                    <span>Я согласен на обработку персональных данных*</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Отправить запрос</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 50px;">
+                <h2>Часто задаваемые вопросы</h2>
+                
+                <div class="faq" style="margin-top: 20px;">
+                    <div class="faq-item">
+                        <h3>Как быстро вы ответите на мой запрос?</h3>
+                        <p>Мы стараемся отвечать на все запросы в течение 24 часов в рабочие дни.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Можно ли получить демонстрацию работы коннекторов?</h3>
+                        <p>Да, мы можем организовать демонстрацию работы коннекторов для корпоративных клиентов. Укажите это в дополнительной информации при заполнении формы.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Какие скидки предусмотрены для корпоративных клиентов?</h3>
+                        <p>Размер скидки зависит от количества аккаунтов и коннекторов. Мы предлагаем индивидуальные условия для каждого корпоративного клиента.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Можно ли заказать разработку кастомного коннектора?</h3>
+                        <p>Да, мы разрабатываем кастомные коннекторы по требованиям клиентов. Укажите ваши потребности в форме запроса.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-container">
+            <div class="logo">BPM Centr</div>
+            <ul class="footer-links">
+                <li><a href="contacts.html" class="active">Контакты</a></li>
+                <li><a href="terms.html">Правовая информация</a></li>
+                <li><a href="privacy.html">Политика конфиденциальности</a></li>
+            </ul>
+            <ul class="social-links">
+                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 BPM Centr. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

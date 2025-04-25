@@ -140,7 +140,7 @@ integrator/
 │   │   ├── external_services/    # Интеграции с внешними сервисами
 │   │   │   ├── stripe/           # Интеграция со Stripe
 │   │   │   ├── make-api/         # Интеграция с API Make
-│   │   │   └── sendgrid/         # Интеграция с SendGrid
+│   │   │   └── sendpulse/         # Интеграция с SendPulse
 │   │   │
 │   │   ├── repositories/         # Реализация репозиториев
 │   │   │   ├── typeorm/          # Реализации на TypeORM
@@ -473,7 +473,7 @@ stateDiagram-v2
 ### Интеграции
 
 - **Платежные системы**: Stripe, PayPal
-- **Email**: SendGrid
+- **Email**: SendPulse
 - **Аналитика**: Google Analytics, Mixpanel
 - **Мониторинг ошибок**: Sentry
 

@@ -4,7 +4,7 @@
 
 ## Обзор маркетплейс-коннекторов
 
-Маркетплейс-коннекторы обеспечивают интеграцию между платформой Make и различными маркетплейсами, такими как Ozon, Wildberries, Яндекс.Маркет и другие. Эти коннекторы позволяют автоматизировать работу с товарами, заказами, остатками и другими сущностями маркетплейсов.
+Маркетплейс-коннекторы обеспечивают интеграцию между платформой Make и различными маркетплейсами, такими как Rozetka, Prom.ua, Allo и другие. Эти коннекторы позволяют автоматизировать работу с товарами, заказами, остатками и другими сущностями маркетплейсов.
 
 ## Пример коннектора для Shopify
 
@@ -479,7 +479,7 @@ const ordersApi = require('../api/orders-api');
 module.exports = {
   name: 'orders',
   label: 'Orders',
-  description: 'Work with orders in Ozon Seller',
+  description: 'Work with orders in Rozetka Seller',
 
   operations: [
     {
@@ -538,7 +538,7 @@ module.exports = {
       execute: async function(params, context) {
         try {
           // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'ozon', context);
+          await checkSubscription(context.auth.bpmCentrApiKey, 'rozetka', context);
 
           // Выполнение операции
           const { orderId } = params;
@@ -602,7 +602,7 @@ module.exports = {
       execute: async function(params, context) {
         try {
           // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'ozon', context);
+          await checkSubscription(context.auth.bpmCentrApiKey, 'rozetka', context);
 
           // Выполнение операции
           const { orderId, items } = params;
@@ -682,7 +682,7 @@ module.exports = {
       poll: async function(params, context) {
         try {
           // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'ozon', context);
+          await checkSubscription(context.auth.bpmCentrApiKey, 'rozetka', context);
 
           // Выполнение операции
           const { maxResults, status } = params;
@@ -713,7 +713,7 @@ module.exports = {
 async function getProduct(clientId, apiKey, productId, context) {
   try {
     const response = await context.http.post({
-      url: 'https://api-seller.ozon.ru/v2/product/info',
+      url: 'https://api.rozetka.com.ua/v2/product/info',
       headers: {
         'Client-Id': clientId,
         'Api-Key': apiKey,
@@ -763,7 +763,7 @@ async function updatePrice(clientId, apiKey, productId, price, oldPrice, context
     };
 
     const response = await context.http.post({
-      url: 'https://api-seller.ozon.ru/v1/product/import/prices',
+      url: 'https://api.rozetka.com.ua/v1/product/import/prices',
       headers: {
         'Client-Id': clientId,
         'Api-Key': apiKey,
@@ -793,7 +793,7 @@ async function updatePrice(clientId, apiKey, productId, price, oldPrice, context
 async function getNewProducts(clientId, apiKey, lastPollTime, maxResults, context) {
   try {
     const response = await context.http.post({
-      url: 'https://api-seller.ozon.ru/v1/product/list',
+      url: 'https://api.rozetka.com.ua/v1/product/list',
       headers: {
         'Client-Id': clientId,
         'Api-Key': apiKey,
@@ -850,7 +850,7 @@ module.exports = {
 async function getOrder(clientId, apiKey, orderId, context) {
   try {
     const response = await context.http.post({
-      url: 'https://api-seller.ozon.ru/v3/order/get',
+      url: 'https://api.rozetka.com.ua/v3/order/get',
       headers: {
         'Client-Id': clientId,
         'Api-Key': apiKey,
@@ -874,7 +874,7 @@ async function getOrder(clientId, apiKey, orderId, context) {
 async function shipOrder(clientId, apiKey, orderId, items, context) {
   try {
     const response = await context.http.post({
-      url: 'https://api-seller.ozon.ru/v2/posting/fbs/ship',
+      url: 'https://api.rozetka.com.ua/v2/posting/fbs/ship',
       headers: {
         'Client-Id': clientId,
         'Api-Key': apiKey,
@@ -905,7 +905,7 @@ async function shipOrder(clientId, apiKey, orderId, items, context) {
 async function getNewOrders(clientId, apiKey, status, lastPollTime, maxResults, context) {
   try {
     const response = await context.http.post({
-      url: 'https://api-seller.ozon.ru/v3/order/list',
+      url: 'https://api.rozetka.com.ua/v3/order/list',
       headers: {
         'Client-Id': clientId,
         'Api-Key': apiKey,
@@ -942,7 +942,7 @@ module.exports = {
 };
 ```
 
-## Пример коннектора для Wildberries
+## Пример коннектора для Prom.ua
 
 ### Структура коннектора
 
@@ -955,9 +955,9 @@ const stocksModule = require('./modules/stocks');
 const { checkSubscription } = require('./utils/subscription');
 
 module.exports = {
-  name: 'wildberries',
-  label: 'Wildberries',
-  description: 'Connector for Wildberries API',
+  name: 'promua',
+  label: 'Prom.ua',
+  description: 'Connector for Prom.ua API',
   icon: './assets/icon.png',
   version: '1.0.0',
   authentication: auth,
@@ -981,7 +981,7 @@ module.exports = {
       label: 'API Key',
       required: true,
       sensitive: true,
-      help: 'Your Wildberries API Key'
+      help: 'Your Prom.ua API Key'
     },
     bpmCentrApiKey: {
       type: 'string',
@@ -993,10 +993,10 @@ module.exports = {
   },
   test: {
     request: {
-      url: 'https://suppliers-api.wildberries.ru/api/v2/supplies',
+      url: 'https://api.prom.ua/api/v1/products',
       method: 'GET',
       headers: {
-        'Authorization': '{{apiKey}}'
+        'Authorization': 'Bearer {{apiKey}}'
       }
     },
     response: {

@@ -82,7 +82,7 @@ const { generateToken } = require('../utils/token');
 module.exports = {
   name: 'payments',
   label: 'Payments',
-  description: 'Work with payments in Tinkoff Payments',
+  description: 'Work with payments in WayForPay',
 
   operations: [
     {
@@ -223,7 +223,7 @@ module.exports = {
             type: 'string',
             label: 'Payment ID',
             required: true,
-            help: 'Tinkoff Payment ID'
+            help: 'WayForPay Payment ID'
           }
         ]
       },
@@ -269,7 +269,7 @@ module.exports = {
       execute: async function(params, context) {
         try {
           // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'tinkoff', context);
+          await checkSubscription(context.auth.bpmCentrApiKey, 'wayforpay', context);
 
           // Выполнение операции
           const { paymentId } = params;
@@ -294,7 +294,7 @@ module.exports = {
             type: 'string',
             label: 'Payment ID',
             required: true,
-            help: 'Tinkoff Payment ID'
+            help: 'WayForPay Payment ID'
           },
           {
             name: 'amount',
@@ -352,7 +352,7 @@ module.exports = {
       execute: async function(params, context) {
         try {
           // Проверка подписки
-          await checkSubscription(context.auth.bpmCentrApiKey, 'tinkoff', context);
+          await checkSubscription(context.auth.bpmCentrApiKey, 'wayforpay', context);
 
           // Выполнение операции
           const { paymentId, amount } = params;
@@ -478,7 +478,7 @@ async function createPayment(terminalKey, password, paymentData, context) {
     requestData.Token = generateToken(requestData, password);
 
     const response = await context.http.post({
-      url: 'https://securepay.tinkoff.ru/v2/Init',
+      url: 'https://api.wayforpay.com/api/payment/create',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -532,7 +532,7 @@ async function getPaymentState(terminalKey, password, paymentId, context) {
     requestData.Token = generateToken(requestData, password);
 
     const response = await context.http.post({
-      url: 'https://securepay.tinkoff.ru/v2/GetState',
+      url: 'https://api.wayforpay.com/api/payment/state',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -564,7 +564,7 @@ async function cancelPayment(terminalKey, password, paymentId, amount, context) 
     requestData.Token = generateToken(requestData, password);
 
     const response = await context.http.post({
-      url: 'https://securepay.tinkoff.ru/v2/Cancel',
+      url: 'https://api.wayforpay.com/api/payment/refund',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -583,7 +583,7 @@ async function cancelPayment(terminalKey, password, paymentId, amount, context) 
 
 async function getNewPayments(terminalKey, password, status, lastPollTime, maxResults, context) {
   try {
-    // К сожалению, Tinkoff API не предоставляет метод для получения списка платежей
+    // К сожалению, WayForPay API не предоставляет удобный метод для получения списка платежей
     // Поэтому здесь представлена имитация такого метода
 
     // В реальном коннекторе здесь может быть реализация с использованием
@@ -672,14 +672,14 @@ module.exports = {
       type: 'string',
       label: 'Public ID',
       required: true,
-      help: 'Your CloudPayments Public ID'
+      help: 'Your Fondy Merchant ID'
     },
     apiSecret: {
       type: 'password',
       label: 'API Secret',
       required: true,
       sensitive: true,
-      help: 'Your CloudPayments API Secret'
+      help: 'Your Fondy API Secret'
     },
     bpmCentrApiKey: {
       type: 'string',
@@ -691,7 +691,7 @@ module.exports = {
   },
   test: {
     request: {
-      url: 'https://api.cloudpayments.ru/test',
+      url: 'https://api.fondy.eu/api/status',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

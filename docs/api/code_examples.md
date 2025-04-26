@@ -18,97 +18,97 @@
 Пример структуры файлов и директорий для бэкенда:
 
 ```
-backend/
-├── src/
-│   ├── domain/
-│   │   ├── entities/
-│   │   │   ├── user.entity.ts
-│   │   │   ├── subscription.entity.ts
-│   │   │   ├── payment.entity.ts
-│   │   │   └── api-key.entity.ts
-│   │   ├── repositories/
-│   │   │   ├── user.repository.interface.ts
-│   │   │   ├── subscription.repository.interface.ts
-│   │   │   └── payment.repository.interface.ts
-│   │   └── services/
-│   │       ├── auth.service.interface.ts
-│   │       ├── subscription.service.interface.ts
-│   │       └── payment.service.interface.ts
-│   ├── application/
-│   │   ├── use_cases/
-│   │   │   ├── auth/
-│   │   │   │   ├── register.use-case.ts
-│   │   │   │   ├── login.use-case.ts
-│   │   │   │   └── verify-email.use-case.ts
-│   │   │   ├── subscription/
-│   │   │   │   ├── create-subscription.use-case.ts
-│   │   │   │   ├── cancel-subscription.use-case.ts
-│   │   │   │   └── resume-subscription.use-case.ts
-│   │   │   └── payment/
-│   │   │       ├── process-payment.use-case.ts
-│   │   │       └── update-payment-method.use-case.ts
-│   │   ├── interfaces/
-│   │   │   ├── stripe.interface.ts
-│   │   │   ├── sendpulse.interface.ts
-│   │   │   └── make.interface.ts
-│   │   └── dto/
-│   │       ├── auth/
-│   │       │   ├── register.dto.ts
-│   │       │   └── login.dto.ts
-│   │       ├── subscription/
-│   │       │   └── subscription.dto.ts
-│   │       └── payment/
-│   │           └── payment.dto.ts
-│   ├── infrastructure/
-│   │   ├── database/
-│   │   │   ├── migrations/
-│   │   │   └── typeorm-config.ts
-│   │   ├── external_services/
-│   │   │   ├── stripe/
-│   │   │   │   ├── stripe.service.ts
-│   │   │   │   └── stripe.module.ts
-│   │   │   ├── sendpulse/
-│   │   │   │   ├── sendpulse.service.ts
-│   │   │   │   └── sendpulse.module.ts
-│   │   │   └── make/
-│   │   │       ├── make.service.ts
-│   │   │       └── make.module.ts
-│   │   ├── repositories/
-│   │   │   ├── typeorm/
-│   │   │   │   ├── user.repository.ts
-│   │   │   │   ├── subscription.repository.ts
-│   │   │   │   └── payment.repository.ts
-│   │   │   └── repositories.module.ts
-│   │   └── security/
-│   │       ├── jwt/
-│   │       │   ├── jwt.strategy.ts
-│   │       │   └── jwt.service.ts
-│   │       └── security.module.ts
-│   ├── interfaces/
-│   │   ├── api/
-│   │   │   ├── controllers/
-│   │   │   │   ├── auth.controller.ts
-│   │   │   │   ├── user.controller.ts
-│   │   │   │   ├── subscription.controller.ts
-│   │   │   │   └── payment.controller.ts
-│   │   │   ├── middlewares/
-│   │   │   │   ├── auth.middleware.ts
-│   │   │   │   └── error-handler.middleware.ts
-│   │   │   └── api.module.ts
-│   │   ├── web/
-│   │   │   └── web.module.ts
-│   │   └── jobs/
-│   │       ├── subscription-reminder.job.ts
-│   │       └── jobs.module.ts
-│   └── main.ts
-├── test/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-├── nest-cli.json
-├── package.json
-├── tsconfig.json
-└── .env.example
+backend/                                 # Корневая директория бэкенда
+├── src/                                 # Исходный код приложения
+│   ├── domain/                          # Слой домена (бизнес-логика)
+│   │   ├── entities/                    # Сущности домена
+│   │   │   ├── user.entity.ts           # Сущность пользователя
+│   │   │   ├── subscription.entity.ts   # Сущность подписки
+│   │   │   ├── payment.entity.ts        # Сущность платежа
+│   │   │   └── api-key.entity.ts        # Сущность API-ключа
+│   │   ├── repositories/                # Интерфейсы репозиториев
+│   │   │   ├── user.repository.interface.ts         # Интерфейс репозитория пользователей
+│   │   │   ├── subscription.repository.interface.ts # Интерфейс репозитория подписок
+│   │   │   └── payment.repository.interface.ts      # Интерфейс репозитория платежей
+│   │   └── services/                    # Интерфейсы сервисов
+│   │       ├── auth.service.interface.ts            # Интерфейс сервиса аутентификации
+│   │       ├── subscription.service.interface.ts    # Интерфейс сервиса подписок
+│   │       └── payment.service.interface.ts         # Интерфейс сервиса платежей
+│   ├── application/                     # Слой приложения (сценарии использования)
+│   │   ├── use_cases/                   # Сценарии использования (use cases)
+│   │   │   ├── auth/                    # Сценарии аутентификации
+│   │   │   │   ├── register.use-case.ts             # Сценарий регистрации
+│   │   │   │   ├── login.use-case.ts                # Сценарий входа
+│   │   │   │   └── verify-email.use-case.ts         # Сценарий подтверждения email
+│   │   │   ├── subscription/            # Сценарии управления подписками
+│   │   │   │   ├── create-subscription.use-case.ts  # Создание подписки
+│   │   │   │   ├── cancel-subscription.use-case.ts  # Отмена подписки
+│   │   │   │   └── resume-subscription.use-case.ts  # Возобновление подписки
+│   │   │   └── payment/                 # Сценарии управления платежами
+│   │   │       ├── process-payment.use-case.ts      # Обработка платежа
+│   │   │       └── update-payment-method.use-case.ts # Обновление метода оплаты
+│   │   ├── interfaces/                  # Интерфейсы внешних сервисов
+│   │   │   ├── stripe.interface.ts      # Интерфейс для Stripe API
+│   │   │   ├── sendpulse.interface.ts   # Интерфейс для SendPulse API
+│   │   │   └── make.interface.ts        # Интерфейс для Make API
+│   │   └── dto/                         # Data Transfer Objects
+│   │       ├── auth/                    # DTO для аутентификации
+│   │       │   ├── register.dto.ts      # DTO для регистрации
+│   │       │   └── login.dto.ts         # DTO для входа
+│   │       ├── subscription/            # DTO для подписок
+│   │       │   └── subscription.dto.ts  # DTO для подписки
+│   │       └── payment/                 # DTO для платежей
+│   │           └── payment.dto.ts       # DTO для платежа
+│   ├── infrastructure/                  # Слой инфраструктуры
+│   │   ├── database/                    # Конфигурация базы данных
+│   │   │   ├── migrations/              # Миграции базы данных
+│   │   │   └── typeorm-config.ts        # Конфигурация TypeORM
+│   │   ├── external_services/           # Интеграции с внешними сервисами
+│   │   │   ├── stripe/                  # Интеграция со Stripe
+│   │   │   │   ├── stripe.service.ts    # Сервис для работы со Stripe
+│   │   │   │   └── stripe.module.ts     # Модуль Stripe для NestJS
+│   │   │   ├── sendpulse/               # Интеграция с SendPulse
+│   │   │   │   ├── sendpulse.service.ts # Сервис для работы с SendPulse
+│   │   │   │   └── sendpulse.module.ts  # Модуль SendPulse для NestJS
+│   │   │   └── make/                    # Интеграция с Make
+│   │   │       ├── make.service.ts      # Сервис для работы с Make API
+│   │   │       └── make.module.ts       # Модуль Make для NestJS
+│   │   ├── repositories/                # Реализации репозиториев
+│   │   │   ├── typeorm/                 # Реализации на TypeORM
+│   │   │   │   ├── user.repository.ts   # Репозиторий пользователей
+│   │   │   │   ├── subscription.repository.ts # Репозиторий подписок
+│   │   │   │   └── payment.repository.ts # Репозиторий платежей
+│   │   │   └── repositories.module.ts   # Модуль репозиториев для NestJS
+│   │   └── security/                    # Компоненты безопасности
+│   │       ├── jwt/                     # JWT аутентификация
+│   │       │   ├── jwt.strategy.ts      # Стратегия JWT для Passport
+│   │       │   └── jwt.service.ts       # Сервис для работы с JWT
+│   │       └── security.module.ts       # Модуль безопасности для NestJS
+│   ├── interfaces/                      # Слой интерфейсов
+│   │   ├── api/                         # REST API
+│   │   │   ├── controllers/             # Контроллеры API
+│   │   │   │   ├── auth.controller.ts   # Контроллер аутентификации
+│   │   │   │   ├── user.controller.ts   # Контроллер пользователей
+│   │   │   │   ├── subscription.controller.ts # Контроллер подписок
+│   │   │   │   └── payment.controller.ts # Контроллер платежей
+│   │   │   ├── middlewares/             # Middleware для API
+│   │   │   │   ├── auth.middleware.ts   # Middleware аутентификации
+│   │   │   │   └── error-handler.middleware.ts # Обработчик ошибок
+│   │   │   └── api.module.ts            # Модуль API для NestJS
+│   │   ├── web/                         # Веб-интерфейс (если есть)
+│   │   │   └── web.module.ts            # Модуль веб-интерфейса
+│   │   └── jobs/                        # Фоновые задачи
+│   │       ├── subscription-reminder.job.ts # Напоминания о подписках
+│   │       └── jobs.module.ts           # Модуль фоновых задач
+│   └── main.ts                          # Точка входа в приложение
+├── test/                                # Тесты
+│   ├── unit/                            # Модульные тесты
+│   ├── integration/                     # Интеграционные тесты
+│   └── e2e/                             # End-to-end тесты
+├── nest-cli.json                        # Конфигурация NestJS CLI
+├── package.json                         # Зависимости и скрипты
+├── tsconfig.json                        # Конфигурация TypeScript
+└── .env.example                         # Пример переменных окружения
 ```
 
 ## Модели данных

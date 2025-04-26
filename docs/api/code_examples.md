@@ -122,6 +122,13 @@ import { Subscription } from './subscription.entity';
 import { ApiKey } from './api-key.entity';
 import { Payment } from './payment.entity';
 
+/**
+ * Перечисление ролей пользователей в системе
+ * USER - обычный пользователь
+ * ADMIN - администратор с расширенными правами
+ * SUPERADMIN - суперадминистратор с полным доступом
+ * SUPPORT - сотрудник технической поддержки
+ */
 export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
@@ -129,38 +136,57 @@ export enum UserRole {
   SUPPORT = 'support',
 }
 
+/**
+ * Перечисление статусов пользователя
+ * UNVERIFIED - email не подтвержден
+ * ACTIVE - активный пользователь
+ * BLOCKED - заблокированный пользователь
+ */
 export enum UserStatus {
   UNVERIFIED = 'unverified',
   ACTIVE = 'active',
   BLOCKED = 'blocked',
 }
 
+/**
+ * Сущность пользователя в системе
+ * Хранит основную информацию о пользователе и его статусе
+ */
 @Entity('users')
 export class User {
+  // Уникальный идентификатор пользователя
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  // Email пользователя (уникальный)
   @Column({ unique: true })
   email: string;
 
+  // Хеш пароля пользователя
   @Column()
   passwordHash: string;
 
+  // Имя пользователя
   @Column()
   firstName: string;
 
+  // Фамилия пользователя
   @Column()
   lastName: string;
 
+  // Название компании (опционально)
   @Column({ nullable: true })
   company: string;
 
+  // Телефон пользователя (опционально)
   @Column({ nullable: true })
   phone: string;
 
+  // Флаг подтверждения email
   @Column({ default: false })
   isEmailVerified: boolean;
 
+  // Роль пользователя в системе
   @Column({
     type: 'enum',
     enum: UserRole,
@@ -168,6 +194,7 @@ export class User {
   })
   role: UserRole;
 
+  // Статус пользователя
   @Column({
     type: 'enum',
     enum: UserStatus,
@@ -175,21 +202,27 @@ export class User {
   })
   status: UserStatus;
 
+  // Дата создания записи
   @CreateDateColumn()
   createdAt: Date;
 
+  // Дата последнего обновления записи
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // Дата последнего входа в систему
   @Column({ nullable: true })
   lastLoginAt: Date;
 
+  // Связь с подписками пользователя
   @OneToMany(() => Subscription, subscription => subscription.user)
   subscriptions: Subscription[];
 
+  // Связь с API-ключами пользователя
   @OneToMany(() => ApiKey, apiKey => apiKey.user)
   apiKeys: ApiKey[];
 
+  // Связь с платежами пользователя
   @OneToMany(() => Payment, payment => payment.user)
   payments: Payment[];
 }
@@ -204,6 +237,16 @@ import { User } from './user.entity';
 import { Connector } from './connector.entity';
 import { Payment } from './payment.entity';
 
+/**
+ * Перечисление статусов подписки
+ * UNVERIFIED - не подтверждена
+ * TRIAL - пробный период
+ * ACTIVE - активная подписка
+ * PAYMENT_PENDING - ожидание оплаты
+ * SUSPENDED - приостановлена
+ * CANCELED - отменена
+ * EXPIRED - истекла
+ */
 export enum SubscriptionStatus {
   UNVERIFIED = 'unverified',
   TRIAL = 'trial',
@@ -214,28 +257,39 @@ export enum SubscriptionStatus {
   EXPIRED = 'expired',
 }
 
+/**
+ * Сущность подписки на коннектор
+ * Связывает пользователя с коннектором и хранит информацию о статусе подписки
+ */
 @Entity('subscriptions')
 export class Subscription {
+  // Уникальный идентификатор подписки
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  // Идентификатор пользователя
   @Column()
   userId: string;
 
+  // Связь с пользователем (при удалении пользователя удаляются все его подписки)
   @ManyToOne(() => User, user => user.subscriptions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 
+  // Идентификатор коннектора
   @Column()
   connectorId: string;
 
+  // Связь с коннектором (при удалении коннектора поле становится NULL)
   @ManyToOne(() => Connector, connector => connector.subscriptions, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'connectorId' })
   connector: Connector;
 
+  // Идентификатор аккаунта Make, к которому привязан коннектор
   @Column()
   makeAccountId: string;
 
+  // Статус подписки
   @Column({
     type: 'enum',
     enum: SubscriptionStatus,
@@ -243,30 +297,39 @@ export class Subscription {
   })
   status: SubscriptionStatus;
 
+  // Дата начала подписки
   @Column()
   startDate: Date;
 
+  // Дата окончания подписки
   @Column()
   endDate: Date;
 
+  // Дата окончания пробного периода (если есть)
   @Column({ nullable: true })
   trialEndDate: Date;
 
+  // Дата отмены подписки (если была отменена)
   @Column({ nullable: true })
   canceledAt: Date;
 
+  // Идентификатор подписки в Stripe (уникальный)
   @Column({ unique: true })
   stripeSubscriptionId: string;
 
+  // Идентификатор клиента в Stripe
   @Column()
   stripeCustomerId: string;
 
+  // Дата создания записи
   @CreateDateColumn()
   createdAt: Date;
 
+  // Дата последнего обновления записи
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // Связь с платежами по этой подписке
   @OneToMany(() => Payment, payment => payment.subscription)
   payments: Payment[];
 }
@@ -646,6 +709,12 @@ export class StripeService implements IStripeService {
     });
   }
 
+  /**
+   * Создает нового клиента в Stripe
+   * @param email - Email клиента
+   * @param name - Имя клиента
+   * @returns ID созданного клиента
+   */
   async createCustomer(email: string, name: string): Promise<string> {
     const customer = await this.stripe.customers.create({
       email,
@@ -655,6 +724,13 @@ export class StripeService implements IStripeService {
     return customer.id;
   }
 
+  /**
+   * Создает подписку в Stripe
+   * @param customerId - ID клиента в Stripe
+   * @param priceId - ID тарифа в Stripe
+   * @param trialPeriodDays - Длительность пробного периода в днях (по умолчанию 7 дней)
+   * @returns ID созданной подписки
+   */
   async createSubscription(
     customerId: string,
     priceId: string,
@@ -670,18 +746,32 @@ export class StripeService implements IStripeService {
     return subscription.id;
   }
 
+  /**
+   * Отменяет подписку в Stripe (в конце текущего периода)
+   * @param subscriptionId - ID подписки в Stripe
+   */
   async cancelSubscription(subscriptionId: string): Promise<void> {
     await this.stripe.subscriptions.update(subscriptionId, {
       cancel_at_period_end: true,
     });
   }
 
+  /**
+   * Возобновляет отмененную подписку в Stripe
+   * @param subscriptionId - ID подписки в Stripe
+   */
   async resumeSubscription(subscriptionId: string): Promise<void> {
     await this.stripe.subscriptions.update(subscriptionId, {
       cancel_at_period_end: false,
     });
   }
 
+  /**
+   * Создает объект события из webhook-запроса Stripe
+   * @param payload - Тело запроса в виде Buffer
+   * @param signature - Подпись запроса из заголовка Stripe-Signature
+   * @returns Объект события Stripe
+   */
   async constructWebhookEvent(
     payload: Buffer,
     signature: string,
@@ -721,6 +811,12 @@ export class SendPulseService implements ISendPulseService {
     this.sendEmail = promisify(this.sendpulse.smtpSendMail.bind(this.sendpulse));
   }
 
+  /**
+   * Отправляет email для подтверждения регистрации
+   * @param email - Email пользователя
+   * @param name - Имя пользователя
+   * @param token - JWT токен для подтверждения email
+   */
   async sendVerificationEmail(
     email: string,
     name: string,
@@ -754,6 +850,12 @@ export class SendPulseService implements ISendPulseService {
     await this.sendEmail(emailData);
   }
 
+  /**
+   * Отправляет уведомление о скором окончании пробного периода
+   * @param email - Email пользователя
+   * @param name - Имя пользователя
+   * @param daysLeft - Количество оставшихся дней пробного периода
+   */
   async sendTrialEndingNotification(
     email: string,
     name: string,
